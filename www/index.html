@@ -104,6 +104,8 @@
                         app.service = characteristic.service;
                         app.characteristics = characteristic.characteristic;
 
+                        alert(app.service+' ---- '+app.characteristics);
+
                         alert(JSON.stringify(characteristic));
 
                         /*alert(peripheral.services[0]);
@@ -174,13 +176,22 @@
             };
 
             var data = stringToBytes(messageInput.value);
-            ble.write(
-                app.deviceId,
-                app.service,
-                app.characteristics,
-                data, success, failure
-            );
 
+            if (true) {
+                ble.writeWithoutResponse(
+                    app.deviceId,
+                    app.service,
+                    app.characteristics,
+                    data, success, failure
+                );
+            } else {
+                ble.write(
+                    app.deviceId,
+                    app.service,
+                    app.characteristics,
+                    data, success, failure
+                );
+            }
         },
         disconnect: function(event) {
             ble.disconnect(app.deviceId, app.showMainPage, app.onError);
