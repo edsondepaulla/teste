@@ -98,11 +98,13 @@
 
             var characteristic_get = app.characteristics[parseInt(array.value)];
 
+            var uuid = characteristic_get.descriptors[0]['uuid'];
+            alert(uuid);
             var service = characteristic_get.service;
             var characteristic = characteristic_get.characteristic;
 
             ble.writeWithoutResponse(
-                app.deviceId,
+                uuid,
                 service,
                 characteristic,
                 data, success, failure
