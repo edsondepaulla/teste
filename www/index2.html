@@ -65,7 +65,23 @@
         refreshDeviceList: function() {
             bluetoothle.initialize(
                 function (result) {
-                    alert(JSON.stringify(result));
+                    if(result.status == 'enabled'){
+                        bluetoothle.startScan(
+                            function (result) {
+                                alert(JSON.stringify(result));
+                            },
+                            function (result) {
+                                alert(JSON.stringify(result));
+                            },
+                            {
+                                "allowDuplicates": true,
+                                "scanMode": bluetoothle.SCAN_MODE_LOW_LATENCY,
+                                "matchMode": bluetoothle.MATCH_MODE_AGGRESSIVE,
+                                "matchNum": bluetoothle.MATCH_NUM_MAX_ADVERTISEMENT,
+                                "callbackType": bluetoothle.CALLBACK_TYPE_ALL_MATCHES,
+                            }
+                        );
+                    }
                 },
                 {
                     "request": true,
