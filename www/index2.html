@@ -27,6 +27,7 @@
             Message:
             <input type="text" id="messageInput" value="1xxxxx"/>
             <button id="sendButton">Send</button>
+            <button id="conectar">Conectar</button>
         </div>
         <button id="disconnectButton">Disconnect</button>
     </div>
@@ -54,42 +55,18 @@
             document.addEventListener('deviceready', this.onDeviceReady, false);
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
             sendButton.addEventListener('click', this.sendData, false);
+            conectar.addEventListener('click', this.conectar, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
             app.refreshDeviceList();
         },
+        device: null,
         refreshDeviceList: function() {
             evothings.ble.startScan(
                 function (device) {
-                    if (device.name == 'Soft ATm') {
-                        evothings.ble.connectToDevice(
-                            device,
-                            function (device) {
-                                alert('Connected to device: ' + device.name);
-
-                                var service = evothings.ble.getService(device, SERVICE_UUID)
-                                var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
-
-                                evothings.ble.writeCharacteristic(
-                                    device,
-                                    characteristic,
-                                    messageInput.value, // Buffer view with data to write
-                                    function () {
-                                        console.log('characteristic written');
-                                    },
-                                    function (errorCode) {
-                                        console.log('writeCharacteristic error: ' + errorCode);
-                                    }
-                                );
-                            },
-                            function (device) {
-                                alert('Disconnected from device: ' + device.name);
-                            },
-                            function (errorCode) {
-                                alert('Connect error: ' + errorCode);
-                            }
-                        );
+                    if (device.name == 'Soft ATm' && app.device == null) {
+                        app.device = device;
                     }
                 },
                 function (errorCode) {
@@ -120,7 +97,40 @@
                 );
             }
         },
-        sendData: function(event) { // send data to Arduino
+        conectar: function() {
+            evothings.ble.connectToDevice(
+                app.device,
+                function (device) {
+                    alert('Connected to device: ' + device.name);
+                },
+                function (device) {
+                    alert('Disconnected from device: ' + device.name);
+                },
+                function (errorCode) {
+                    alert('Connect error: ' + errorCode);
+                }
+            );
+        },
+        sendData: function() { // send data to Arduino
+            alert('Connected to device: ' + app.device.name);
+
+            var service = evothings.ble.getService(app.device, SERVICE_UUID)
+            var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
+
+            evothings.ble.writeCharacteristic(
+                app.device,
+                characteristic,
+                messageInput.value, // Buffer view with data to write
+                function () {
+                    alert('characteristic written');
+                },
+                function (errorCode) {
+                    alert('writeCharacteristic error: ' + errorCode);
+                }
+            );
+
+            return;
+
             var success = function (e) {
                 alert("Ok - "+e);
                 resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
