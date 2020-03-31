@@ -63,14 +63,14 @@
         },
         device: null,
         refreshDeviceList: function() {
-            evothings.ble.startScan(
-                function (device) {
-                    if (device.name == 'Soft ATm' && app.device == null) {
-                        app.device = device;
-                    }
+            bluetoothle.initialize(
+                function (result) {
+                    alert(JSON.stringify(result));
                 },
-                function (errorCode) {
-                    alert('startScan error: ' + errorCode);
+                {
+                    "request": true,
+                    "statusReceiver": false,
+                    "restoreKey": "bluetoothleplugin"
                 }
             );
         },
