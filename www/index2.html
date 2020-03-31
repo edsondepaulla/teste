@@ -25,7 +25,7 @@
             <br>
             <br>
             Message:
-            <input type="text" id="messageInput" value="1"/>
+            <input type="text" id="messageInput" value="1xxxxx"/>
             <button id="sendButton">Send</button>
         </div>
         <button id="disconnectButton">Disconnect</button>
@@ -61,12 +61,38 @@
         },
         refreshDeviceList: function() {
             evothings.ble.startScan(
-                function(device)
-                {
-                    alert('startScan found device named: ' + device.name);
+                function (device) {
+                    if (device.name == 'Soft ATm') {
+                        evothings.ble.connectToDevice(
+                            device,
+                            function (device) {
+                                alert('Connected to device: ' + device.name);
+
+                                var service = evothings.ble.getService(device, SERVICE_UUID)
+                                var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
+
+                                evothings.ble.writeCharacteristic(
+                                    device,
+                                    characteristic,
+                                    messageInput.value, // Buffer view with data to write
+                                    function () {
+                                        console.log('characteristic written');
+                                    },
+                                    function (errorCode) {
+                                        console.log('writeCharacteristic error: ' + errorCode);
+                                    }
+                                );
+                            },
+                            function (device) {
+                                alert('Disconnected from device: ' + device.name);
+                            },
+                            function (errorCode) {
+                                alert('Connect error: ' + errorCode);
+                            }
+                        );
+                    }
                 },
-                function(errorCode)
-                {
+                function (errorCode) {
                     alert('startScan error: ' + errorCode);
                 }
             );
