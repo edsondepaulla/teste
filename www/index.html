@@ -65,7 +65,6 @@
 
     var app = {
         deviceId: null,
-        service: null,
         characteristics: null,
         initialize: function() {
             this.bindEvents();
@@ -115,10 +114,7 @@
                             x++;
                         })[0];
 
-                        var characteristic = peripheral.characteristics[parseInt(array.value)];
-
-                        app.service = characteristic.service;
-                        app.characteristics = characteristic.characteristic;
+                        app.characteristics = peripheral.characteristics;
 
                         /*alert(app.service+' ---- '+app.characteristics);
 
@@ -193,18 +189,26 @@
 
             var data = stringToBytes(messageInput.value);
 
+
+            var characteristic_get = app.characteristics[parseInt(array.value)];
+
+            var service = characteristic_get.service;
+            var characteristic = characteristic_get.characteristic;
+
+            alert(service + ' ---- '+characteristic);
+            
             if (parseInt(teste.value)) {
                 ble.writeWithoutResponse(
                     app.deviceId,
-                    app.service,
-                    app.characteristics,
+                    service,
+                    characteristic,
                     data, success, failure
                 );
             } else {
                 ble.write(
                     app.deviceId,
-                    app.service,
-                    app.characteristics,
+                    service,
+                    characteristic,
                     data, success, failure
                 );
             }
