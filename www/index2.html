@@ -15,6 +15,7 @@
         <ul id="deviceList">
         </ul>
         <button id="refreshButton">Refresh</button>
+        <button id="retrieveConnected">retrieveConnected</button>
     </div>
     <div id="detailPage">
         <div id="resultDiv"></div>
@@ -56,6 +57,7 @@
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
             sendButton.addEventListener('click', this.sendData, false);
             conectar.addEventListener('click', this.conectar, false);
+            retrieveConnected.addEventListener('click', this.retrieveConnected, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
@@ -113,19 +115,21 @@
                 );
             }
         },
-        conectar: function() {
-            evothings.ble.connectToDevice(
-                app.device,
-                function (device) {
-                    alert('Connected to device: ' + device.name);
+        retrieveConnected: function(){
+            bluetoothle.retrieveConnected(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
                 },
-                function (device) {
-                    alert('Disconnected from device: ' + device.name);
+                function (result) {
+                    alert(JSON.stringify(result));
                 },
-                function (errorCode) {
-                    alert('Connect error: ' + errorCode);
+                {
+                    "services": []
                 }
             );
+        },
+        conectar: function() {
+
         },
         sendData: function() { // send data to Arduino
             alert('Enviando msg: ' + messageInput.value);
