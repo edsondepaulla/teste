@@ -51,6 +51,7 @@
     };
 
     var app = {
+        deviceId: null,
         initialize: function() {
             this.bindEvents();
         },
@@ -87,6 +88,7 @@
         onDiscoverDevice: function(device) {
             if(device.name == 'Soft ATm') {
                 alert('entrou');
+                app.deviceId = device.id;
                 ble.connect(
                     device.id,
                     function (peripheral) {
@@ -186,8 +188,7 @@
 
         },
         disconnect: function(event) {
-            var deviceId = event.target.dataset.deviceId;
-            ble.disconnect(deviceId, app.showMainPage, app.onError);
+            ble.disconnect(app.deviceId, app.showMainPage, app.onError);
         },
         showMainPage: function() {
 
