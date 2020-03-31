@@ -4,7 +4,7 @@
   <description>
     teste
   </description>
-  <content src="index.html" />
+  <content src="index2.html" />
   <access origin="*" />
   <allow-navigation href="*" />
   <allow-intent href="*" />
@@ -70,6 +70,7 @@
   <plugin name="phonegap-plugin-barcodescanner" />
   <!--<plugin name="cordova-plugin-bluetoothle" />-->
   <plugin name="cordova-plugin-ble-central" />
+  <plugin name="cordova-plugin-ble" />
   <plugin name="cordova-plugin-customurlscheme" spec="5.0.0">
     <param name="URL_SCHEME" value="market4uapp" />
   </plugin>
