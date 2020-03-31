@@ -19,6 +19,7 @@
         <button id="stopScan">stopScan</button>
         <button id="conectar">Conectar</button>
         <button id="retrieveConnected">retrieveConnected</button>
+        <button id="requestPermission">requestPermission</button>
         <button id="characteristics">characteristics</button>
         <button id="services">services</button>
         <button id="bond">bond</button>
@@ -76,6 +77,7 @@
             startScan.addEventListener('click', this.startScan, false);
             stopScan.addEventListener('click', this.stopScan, false);
             retrieveConnected.addEventListener('click', this.retrieveConnected, false);
+            requestPermission.addEventListener('click', this.requestPermission, false);
             characteristics.addEventListener('click', this.characteristicsF, false);
             services.addEventListener('click', this.services, false);
             bond.addEventListener('click', this.bond, false);
@@ -146,6 +148,24 @@
                     app.onError
                 );
             }
+        },
+        requestPermission: function(){
+            bluetoothle.requestPermission(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                }
+            );
+            bluetoothle.requestLocation(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                }
+            );
         },
         retrieveConnected: function(){
             bluetoothle.retrieveConnected(
