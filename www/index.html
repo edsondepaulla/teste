@@ -177,13 +177,13 @@
         },
         sendData: function(event) { // send data to Arduino
 
-            var success = function() {
+            var success = function () {
                 console.log("success");
                 resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
                 resultDiv.scrollTop = resultDiv.scrollHeight;
             };
 
-            var failure = function(e) {
+            var failure = function (e) {
                 alert("Failed writing data to the - " + e);
             };
 
@@ -194,19 +194,21 @@
             var service = characteristic_get.service;
             var characteristic = characteristic_get.characteristic;
 
-            ble.writeWithoutResponse(
-                app.deviceId,
-                service,
-                characteristic,
-                data, success, failure
-            );
-
-            ble.write(
-                app.deviceId,
-                service,
-                characteristic,
-                data, success, failure
-            );
+            if (parseInt(teste.value)) {
+                ble.writeWithoutResponse(
+                    app.deviceId,
+                    service,
+                    characteristic,
+                    data, success, failure
+                );
+            } else {
+                ble.write(
+                    app.deviceId,
+                    service,
+                    characteristic,
+                    data, success, failure
+                );
+            }
         },
         disconnect: function(event) {
             ble.disconnect(app.deviceId, app.showMainPage, app.onError);
