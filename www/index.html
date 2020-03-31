@@ -110,7 +110,7 @@
                         alert('entrou 2');
                         var x = 0;
                         var xxx = peripheral.characteristics.filter(function (element) {
-                            resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(characteristic);
+                            resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(element);
                             resultDiv.scrollTop = resultDiv.scrollHeight;
                             x++;
                         })[0];
