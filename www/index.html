@@ -86,9 +86,12 @@
         },
         onDiscoverDevice: function(device) {
             if(device.name == 'Soft ATm') {
+                alert('entrou');
                 ble.connect(
                     device.id,
                     function (peripheral) {
+                        alert('entrou 2');
+
                         var characteristic = peripheral.characteristics.filter(function (element) {
                             if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                                 return element;
@@ -105,7 +108,8 @@
                     },
                     app.onError
                 );
-            }
+            }else
+                alert(device.name);
 
             /*var listItem = document.createElement('li'),
                     html = '<b>' + device.name + '</b><br/>' +
