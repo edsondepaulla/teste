@@ -17,6 +17,7 @@
         <button id="refreshButton">Refresh</button>
         <button id="startScan">startScan</button>
         <button id="stopScan">stopScan</button>
+        <button id="conectar">Conectar</button>
         <button id="retrieveConnected">retrieveConnected</button>
         <button id="bond">bond</button>
     </div>
@@ -31,7 +32,6 @@
             Message:
             <input type="text" id="messageInput" value="1xxxxx"/>
             <button id="sendButton">Send</button>
-            <button id="conectar">Conectar</button>
         </div>
         <button id="disconnectButton">Disconnect</button>
     </div>
@@ -60,6 +60,7 @@
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
             sendButton.addEventListener('click', this.sendData, false);
             conectar.addEventListener('click', this.conectar, false);
+            startScan.addEventListener('click', this.startScan, false);
             startScan.addEventListener('click', this.startScan, false);
             stopScan.addEventListener('click', this.stopScan, false);
             retrieveConnected.addEventListener('click', this.retrieveConnected, false);
@@ -155,10 +156,37 @@
             );
         },
         conectar: function() {
-
+            bluetoothle.connect(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
+                }
+            );
         },
         sendData: function() { // send data to Arduino
             alert('Enviando msg: ' + messageInput.value);
+
+            bluetoothle.write(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "characteristic": "2A19",
+                    "value": stringToBytes(messageInput.value),
+                    "service": "180F",
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
+                }
+            );
+
+            return;
 
             var service = evothings.ble.getService(app.device, SERVICE_UUID)
             var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
