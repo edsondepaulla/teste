@@ -52,6 +52,9 @@
 
     var app = {
         deviceId: null,
+        service: null,
+        characteristics: null,
+        writeWithoutResponse: true,
         initialize: function() {
             this.bindEvents();
         },
@@ -93,8 +96,13 @@
                     app.deviceId,
                     function (peripheral) {
                         alert('entrou 2');
-                        alert(peripheral.services[0]);
-                        alert(peripheral.characteristics[0]['characteristic']);
+                        app.service = peripheral.services[0];
+                        app.characteristics = peripheral.characteristics[0]['characteristic'];
+                        app.writeWithoutResponse = true;
+
+
+                        /*alert(peripheral.services[0]);
+                        alert(peripheral.characteristics[0]['characteristic']);*/
 
                         /*var characteristic = peripheral.characteristics.filter(function (element) {
                             alert(element.characteristic.toLowerCase());
@@ -165,15 +173,15 @@
             if (app.writeWithoutResponse) {
                 ble.writeWithoutResponse(
                     app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
+                    app.service,
+                    app.characteristics,
                     data, success, failure
                 );
             } else {
                 ble.write(
                     app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
+                    app.service,
+                    app.characteristics,
                     data, success, failure
                 );
             }
