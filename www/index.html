@@ -19,6 +19,7 @@
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
+            <input type="text" id="teste" value="1"/>
             <input type="text" id="messageInput" value="1"/>
             <button id="sendButton">Send</button>
         </div>
@@ -177,7 +178,7 @@
 
             var data = stringToBytes(messageInput.value);
 
-            if (true) {
+            if (parseInt(teste.value)) {
                 ble.writeWithoutResponse(
                     app.deviceId,
                     app.service,
