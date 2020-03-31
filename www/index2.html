@@ -15,7 +15,10 @@
         <ul id="deviceList">
         </ul>
         <button id="refreshButton">Refresh</button>
+        <button id="startScan">startScan</button>
+        <button id="stopScan">stopScan</button>
         <button id="retrieveConnected">retrieveConnected</button>
+        <button id="bond">bond</button>
     </div>
     <div id="detailPage">
         <div id="resultDiv"></div>
@@ -57,7 +60,10 @@
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
             sendButton.addEventListener('click', this.sendData, false);
             conectar.addEventListener('click', this.conectar, false);
+            startScan.addEventListener('click', this.startScan, false);
+            stopScan.addEventListener('click', this.stopScan, false);
             retrieveConnected.addEventListener('click', this.retrieveConnected, false);
+            bond.addEventListener('click', this.bond, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
@@ -67,28 +73,40 @@
         refreshDeviceList: function() {
             bluetoothle.initialize(
                 function (result) {
-                    if (result.status == 'enabled') {
-                        bluetoothle.startScan(
-                            function (result) {
-                                resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                            },
-                            function (result) {
-                                alert(JSON.stringify(result));
-                            },
-                            {
-                                "allowDuplicates": true,
-                                "scanMode": bluetoothle.SCAN_MODE_LOW_LATENCY,
-                                "matchMode": bluetoothle.MATCH_MODE_AGGRESSIVE,
-                                "matchNum": bluetoothle.MATCH_NUM_MAX_ADVERTISEMENT,
-                                "callbackType": bluetoothle.CALLBACK_TYPE_ALL_MATCHES
-                            }
-                        );
-                    }
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+
                 },
                 {
                     "request": true,
                     "statusReceiver": false,
                     "restoreKey": "bluetoothleplugin"
+                }
+            );
+        },
+        stopScan : function() {
+            bluetoothle.stopScan (
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                }
+            );
+        },
+        startScan: function() {
+            bluetoothle.startScan(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "allowDuplicates": true,
+                    "scanMode": bluetoothle.SCAN_MODE_LOW_LATENCY,
+                    "matchMode": bluetoothle.MATCH_MODE_AGGRESSIVE,
+                    "matchNum": bluetoothle.MATCH_NUM_MAX_ADVERTISEMENT,
+                    "callbackType": bluetoothle.CALLBACK_TYPE_ALL_MATCHES
                 }
             );
         },
@@ -125,6 +143,16 @@
                 },
                 {
                     "services": []
+                }
+            );
+        },
+        bond: function(){
+            bluetoothle.bond(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
                 }
             );
         },
