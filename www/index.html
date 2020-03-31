@@ -90,11 +90,13 @@
                 alert('entrou');
                 app.deviceId = device.id;
                 ble.connect(
-                    device.id,
+                    app.deviceId,
                     function (peripheral) {
                         alert('entrou 2');
+                        alert(peripheral);
 
                         var characteristic = peripheral.characteristics.filter(function (element) {
+                            alert(element.characteristic.toLowerCase());
                             if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                                 return element;
                             }
@@ -110,17 +112,7 @@
                     },
                     app.onError
                 );
-            }else
-                alert(device.name);
-
-            /*var listItem = document.createElement('li'),
-                    html = '<b>' + device.name + '</b><br/>' +
-                            'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
-                            device.id;
-
-            listItem.dataset.deviceId = device.id;
-            listItem.innerHTML = html;
-            deviceList.appendChild(listItem);*/
+            }
         },
         connect: function(e) {
             var deviceId = e.target.dataset.deviceId,
@@ -168,18 +160,17 @@
             };
 
             var data = stringToBytes(messageInput.value);
-            var deviceId = event.target.dataset.deviceId;
 
             if (app.writeWithoutResponse) {
                 ble.writeWithoutResponse(
-                    deviceId,
+                    app.deviceId,
                     bluefruit.serviceUUID,
                     bluefruit.txCharacteristic,
                     data, success, failure
                 );
             } else {
                 ble.write(
-                    deviceId,
+                    app.deviceId,
                     bluefruit.serviceUUID,
                     bluefruit.txCharacteristic,
                     data, success, failure
