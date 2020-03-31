@@ -99,14 +99,14 @@
                         app.characteristics = peripheral.characteristics[0]['characteristic'];
 
 
-                        var characteristic = peripheral.characteristics.filter(function (element) {
+                        /*var characteristic = peripheral.characteristics.filter(function (element) {
                             alert(element.characteristic.toLowerCase());
                             if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                                 return element;
                             }
-                        })[0];
+                        })[0];*/
 
-                        alert(characteristic);
+                        alert(JSON.stringify(peripheral));
 
                         /*alert(peripheral.services[0]);
                         alert(peripheral.characteristics[0]['characteristic']);*/
