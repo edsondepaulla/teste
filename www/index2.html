@@ -68,6 +68,7 @@
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
+            resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(device);
             app.refreshDeviceList();
         },
         device: null,
