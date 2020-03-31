@@ -6,11 +6,11 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,  target-densitydpi=device-dpi" />
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>BluefruitLE</title>
+    <title>TESTE</title>
 </head>
 <body>
 <div class="app">
-    <h1>BluefruitLE</h1>
+    <h1>TESTE</h1>
     <div id="mainPage">
         <ul id="deviceList">
         </ul>
@@ -19,15 +19,8 @@
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
-            <br>
-            <br>
             Array:
             <input type="text" id="array" value="0"/>
-
-            <br>
-            <br>
-            Tipo envio:
-            <input type="text" id="teste" value="1"/>
 
             <br>
             <br>
@@ -43,11 +36,6 @@
     'use strict';
 
     // ASCII only
-    function bytesToString(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
-
-    // ASCII only
     function stringToBytes(string) {
         var array = new Uint8Array(string.length);
         for (var i = 0, l = string.length; i < l; i++) {
@@ -55,13 +43,6 @@
         }
         return array.buffer;
     }
-
-    // this is Nordic's UART service
-    var bluefruit = {
-        serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
-        txCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e', // transmit is from the phone's perspective
-        rxCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e'  // receive is from the phone's perspective
-    };
 
     var app = {
         deviceId: null,
@@ -74,29 +55,11 @@
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
             sendButton.addEventListener('click', this.sendData, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
-            deviceList.addEventListener('touchstart', this.connect, false); // assume not scrolling
         },
         onDeviceReady: function() {
             app.refreshDeviceList();
         },
         refreshDeviceList: function() {
-            /*ble.enable(
-                    function () {
-                      alert("Bluetooth ligado");
-
-                      ble.scan(
-                              [],
-                              5,
-                              function (device) {
-                                alert(device.name + ' - ' + device.rssi + ' - ' + device.id);
-                              },
-                              app.onError
-                      );
-                    },
-                    function () {
-                      alert("Bluetooth não ligado");
-                    }
-            );*/
             ble.scan([], 5, app.onDiscoverDevice, app.onError);
         },
         onDiscoverDevice: function(device) {
@@ -115,70 +78,14 @@
                         })[0];
 
                         app.characteristics = peripheral.characteristics;
-
-                        /*alert(app.service+' ---- '+app.characteristics);
-
-                        alert(JSON.stringify(characteristic));*/
-
-                        /*alert(peripheral.services[0]);
-                        alert(peripheral.characteristics[0]['characteristic']);*/
-
-                        /*var characteristic = peripheral.characteristics.filter(function (element) {
-                            alert(element.characteristic.toLowerCase());
-                            if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
-                                return element;
-                            }
-                        })[0];
-
-                        if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
-                            app.writeWithoutResponse = true;
-                        } else {
-                            app.writeWithoutResponse = false;
-                        }
-
-                        alert(app.writeWithoutResponse + ' - OK');*/
                     },
                     app.onError
                 );
             }
         },
-        connect: function(e) {
-            var deviceId = e.target.dataset.deviceId,
-                onConnect = function(peripheral) {
-                    app.determineWriteType(peripheral);
-
-                    // subscribe for incoming data
-                    ble.startNotification(deviceId, bluefruit.serviceUUID, bluefruit.rxCharacteristic, app.onData, app.onError);
-                    sendButton.dataset.deviceId = deviceId;
-                    disconnectButton.dataset.deviceId = deviceId;
-                    resultDiv.innerHTML = "";
-                };
-
-            ble.connect(deviceId, onConnect, app.onError);
-        },
-        determineWriteType: function(peripheral) {
-            var characteristic = peripheral.characteristics.filter(function(element) {
-                if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
-                    return element;
-                }
-            })[0];
-
-            if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
-                app.writeWithoutResponse = true;
-            } else {
-                app.writeWithoutResponse = false;
-            }
-
-        },
-        onData: function(data) { // data received from Arduino
-            console.log(data);
-            resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
-            resultDiv.scrollTop = resultDiv.scrollHeight;
-        },
         sendData: function(event) { // send data to Arduino
-
-            var success = function () {
-                console.log("success");
+            var success = function (e) {
+                alert("Ok - "+e);
                 resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
                 resultDiv.scrollTop = resultDiv.scrollHeight;
             };
@@ -194,27 +101,18 @@
             var service = characteristic_get.service;
             var characteristic = characteristic_get.characteristic;
 
-            if (parseInt(teste.value)) {
-                ble.writeWithoutResponse(
-                    app.deviceId,
-                    service,
-                    characteristic,
-                    data, success, failure
-                );
-            } else {
-                ble.write(
-                    app.deviceId,
-                    service,
-                    characteristic,
-                    data, success, failure
-                );
-            }
+            ble.writeWithoutResponse(
+                app.deviceId,
+                service,
+                characteristic,
+                data, success, failure
+            );
         },
         disconnect: function(event) {
             ble.disconnect(app.deviceId, app.showMainPage, app.onError);
         },
         showMainPage: function() {
-
+            resultDiv.innerHTML - '';
         },
         onError: function(reason) {
             alert("ERROR: " + JSON.stringify(reason)); // real apps should use notification.alert
