@@ -85,7 +85,27 @@
             ble.scan([], 5, app.onDiscoverDevice, app.onError);
         },
         onDiscoverDevice: function(device) {
-            alert(device.name);
+            if(device.name == 'Soft ATm') {
+                ble.connect(
+                    device.id,
+                    function (peripheral) {
+                        var characteristic = peripheral.characteristics.filter(function (element) {
+                            if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
+                                return element;
+                            }
+                        })[0];
+
+                        if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
+                            app.writeWithoutResponse = true;
+                        } else {
+                            app.writeWithoutResponse = false;
+                        }
+
+                        alert(app.writeWithoutResponse + ' - OK');
+                    },
+                    app.onError
+                );
+            }
 
             /*var listItem = document.createElement('li'),
                     html = '<b>' + device.name + '</b><br/>' +
@@ -111,9 +131,6 @@
             ble.connect(deviceId, onConnect, app.onError);
         },
         determineWriteType: function(peripheral) {
-            // Adafruit nRF8001 breakout uses WriteWithoutResponse for the TX characteristic
-            // Newer Bluefruit devices use Write Request for the TX characteristic
-
             var characteristic = peripheral.characteristics.filter(function(element) {
                 if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                     return element;
