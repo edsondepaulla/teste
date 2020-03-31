@@ -54,7 +54,6 @@
         deviceId: null,
         service: null,
         characteristics: null,
-        writeWithoutResponse: true,
         initialize: function() {
             this.bindEvents();
         },
@@ -98,7 +97,6 @@
                         alert('entrou 2');
                         app.service = peripheral.services[0];
                         app.characteristics = peripheral.characteristics[0]['characteristic'];
-                        app.writeWithoutResponse = true;
 
 
                         /*alert(peripheral.services[0]);
@@ -169,22 +167,12 @@
             };
 
             var data = stringToBytes(messageInput.value);
-
-            if (app.writeWithoutResponse) {
-                ble.writeWithoutResponse(
-                    app.deviceId,
-                    app.service,
-                    app.characteristics,
-                    data, success, failure
-                );
-            } else {
-                ble.write(
-                    app.deviceId,
-                    app.service,
-                    app.characteristics,
-                    data, success, failure
-                );
-            }
+            ble.write(
+                app.deviceId,
+                app.service,
+                app.characteristics,
+                data, success, failure
+            );
 
         },
         disconnect: function(event) {
