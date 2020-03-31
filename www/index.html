@@ -98,16 +98,13 @@
                         app.service = peripheral.services[0];
                         app.characteristics = peripheral.characteristics[0]['characteristic'];
 
-
-                        /*var characteristic = peripheral.characteristics.filter(function (element) {
-                            alert(element.characteristic.toLowerCase());
-                            if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
+                        var characteristic = peripheral.characteristics.filter(function (element) {
+                            if(element.properties.indexOf('WriteWithoutResponse') > -1){
                                 return element;
                             }
-                        })[0];*/
-
-                        alert(JSON.stringify(peripheral.services));
-                        alert(JSON.stringify(peripheral.characteristics));
+                        })[0];
+                        
+                        alert(JSON.stringify(characteristic));
 
                         /*alert(peripheral.services[0]);
                         alert(peripheral.characteristics[0]['characteristic']);*/
