@@ -19,7 +19,7 @@
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
-            <input type="text" id="messageInput" value="Hello"/>
+            <input type="text" id="messageInput" value="1"/>
             <button id="sendButton">Send</button>
         </div>
         <button id="disconnectButton">Disconnect</button>
@@ -93,9 +93,10 @@
                     app.deviceId,
                     function (peripheral) {
                         alert('entrou 2');
-                        alert(peripheral);
+                        alert(peripheral.services[0]);
+                        alert(peripheral.characteristics[0]['characteristic']);
 
-                        var characteristic = peripheral.characteristics.filter(function (element) {
+                        /*var characteristic = peripheral.characteristics.filter(function (element) {
                             alert(element.characteristic.toLowerCase());
                             if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                                 return element;
@@ -108,7 +109,7 @@
                             app.writeWithoutResponse = false;
                         }
 
-                        alert(app.writeWithoutResponse + ' - OK');
+                        alert(app.writeWithoutResponse + ' - OK');*/
                     },
                     app.onError
                 );
