@@ -19,11 +19,23 @@
         <button id="stopScan">stopScan</button>
         <button id="conectar">Conectar</button>
         <button id="retrieveConnected">retrieveConnected</button>
+        <button id="characteristics">characteristics</button>
+        <button id="services">services</button>
         <button id="bond">bond</button>
     </div>
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
+            characteristic:
+            <input type="text" id="input_characteristic" value=""/>
+
+            <br>
+            <br>
+            service:
+            <input type="text" id="input_service" value=""/>
+
+            <br>
+            <br>
             Array:
             <input type="text" id="array" value="0"/>
 
@@ -64,6 +76,8 @@
             startScan.addEventListener('click', this.startScan, false);
             stopScan.addEventListener('click', this.stopScan, false);
             retrieveConnected.addEventListener('click', this.retrieveConnected, false);
+            characteristics.addEventListener('click', this.characteristicsF, false);
+            services.addEventListener('click', this.services, false);
             bond.addEventListener('click', this.bond, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
@@ -146,6 +160,33 @@
                 }
             );
         },
+        services: function(){
+            bluetoothle.services(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
+                }
+            );
+        },
+        characteristicsF: function(){
+            bluetoothle.characteristics(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78",
+                    "service": input_service.value
+                }
+            );
+        },
         bond: function(){
             bluetoothle.bond(
                 function (result) {
@@ -180,9 +221,9 @@
                     alert(JSON.stringify(result));
                 },
                 {
-                    "characteristic": "2A19",
+                    "characteristic": input_characteristic.value,
                     "value": stringToBytes(messageInput.value),
-                    "service": "180F",
+                    "service": input_service.value,
                     "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
                 }
             );
