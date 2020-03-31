@@ -95,15 +95,15 @@
                     app.deviceId,
                     function (peripheral) {
                         alert('entrou 2');
-                        app.service = peripheral.services[0];
-                        app.characteristics = peripheral.characteristics[0]['characteristic'];
-
                         var characteristic = peripheral.characteristics.filter(function (element) {
                             if(element.properties.indexOf('WriteWithoutResponse') > -1){
                                 return element;
                             }
                         })[0];
-                        
+
+                        app.service = characteristic.service;
+                        app.characteristics = characteristic.characteristic;
+
                         alert(JSON.stringify(characteristic));
 
                         /*alert(peripheral.services[0]);
