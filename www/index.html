@@ -194,11 +194,6 @@
             var service = characteristic_get.service;
             var characteristic = characteristic_get.characteristic;
 
-            alert(service + ' ---- '+characteristic);
-
-            // send 1 byte to switch a light on
-            ble.write(device_id, "FF10", "FF11", data.buffer, success, failure);
-
             ble.writeWithoutResponse(
                 app.deviceId,
                 service,
