@@ -1,29 +1,76 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>Teste</name>
+﻿<?xml version='1.0' encoding='utf-8'?>
+<widget id="br.com.mobile.market4u" version="1.0.16" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>teste</name>
   <description>
-    Teste
-    </description>
+    teste
+  </description>
   <content src="index.html" />
-  <plugin name="cordova-plugin-whitelist" spec="1" />
   <access origin="*" />
-  <allow-intent href="http://*/*" />
-  <allow-intent href="https://*/*" />
+  <allow-navigation href="*" />
+  <allow-intent href="*" />
   <allow-intent href="tel:*" />
   <allow-intent href="sms:*" />
   <allow-intent href="mailto:*" />
   <allow-intent href="geo:*" />
+  <allow-intent href="market4uapp:" />
+  <preference name="HideKeyboardFormAccessoryBar" value="false"/>
+  <preference name="SplashScreen" value="screen" />
+  <preference name="SplashScreenDelay" value="1000" />
+  <preference name="ShowSplashScreenSpinner" value="0" />
+  <preference name="StatusBarOverlaysWebView" value="true" />
+  <preference name="StatusBarStyle" value="lightcontent" />
+  <preference name="StatusBarBackgroundColor" value="#00ab46" />
+  <preference name="FadeSplashScreen" value="false" />
+  <preference name="FadeSplashScreenDuration" value="0" />
+  <preference name="DisallowOverscroll" value="false" />
+  <preference name="SplashMaintainAspectRatio" value="true" />
+  <preference name="SplashShowOnlyFirstTime" value="true" />
+  <preference name="AutoHideSplashScreen" value="true" />
+  <preference name="fullscreen" value="false" />
+  <preference name="orientation" value="portrait" />
+  <preference name="target-device" value="handset" />
+  <preference name="phonegap-version" value="cli-9.0.0" />
+  <preference name="ios-version" value="cli-10.0.0" />
+  <preference name="SwiftVersion" value="3.0" />
+  <preference name="android-build-tool" value="gradle" />
   <platform name="android">
-    <allow-intent href="market:*" />
+      <allow-intent href="market:*" />
   </platform>
   <platform name="ios">
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="SplashScreenDelay" value="0" />
+    <preference name="SplashMaintainAspectRatio" value="false" />
+    <preference name="SplashShowOnlyFirstTime" value="false" />
+    <preference name="StatusBarStyle" value="lightcontent" />
+    <preference name="ShowSplashScreenSpinner" value="false" />
+    <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Permissões de acesso</string>
+    </edit-config>
+    <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Permissões de acesso</string>
+    </edit-config>
+    <edit-config target="NSLocationAlwaysUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Permissões de acesso</string>
+    </edit-config>
   </platform>
-  <preference name="Fullscreen" value="True" />
-  <preference name="KeepRunning" value="True" />
-  <preference name="ShowTitle" value="True" />
-  <preference name="InAppBrowserStorageEnabled" value="True" />
-  <preference name="SuppressesIncrementalRendering" value="True" />
+  <engine name="ios" spec="^5.0.1" />
+  <engine name="android" spec="~8.0.0" />
+  <plugin name="cordova-plugin-ios-non-exempt-encryption" />
+  <plugin name="cordova-plugin-keyboard" spec="^1.1.5" />
+  <plugin name="cordova-plugin-splashscreen" />
+  <plugin name="cordova-plugin-whitelist" spec="1" />
+  <plugin name="cordova-plugin-x-toast" spec="^2.6.0" />
+  <plugin name="cordova-plugin-statusbar" spec="~2.2.3" />
+  <plugin name="cordova-plugin-safariviewcontroller" spec="~1.6.0" />
+  <plugin name="cordova-plugin-geolocation" />
+  <plugin name="cordova-plugin-dialogs" spec="^2.0.1" />
+  <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+  <plugin name="phonegap-plugin-barcodescanner" />
+  <!--<plugin name="cordova-plugin-bluetoothle" />-->
   <plugin name="cordova-plugin-ble-central" />
+  <plugin name="cordova-plugin-customurlscheme" spec="5.0.0">
+    <param name="URL_SCHEME" value="market4uapp" />
+  </plugin>
 </widget>
