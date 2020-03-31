@@ -112,7 +112,7 @@
             );
         },
         sendData: function() { // send data to Arduino
-            alert('Connected to device: ' + app.device.name);
+            alert('Enviando msg: ' + messageInput.value);
 
             var service = evothings.ble.getService(app.device, SERVICE_UUID)
             var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
@@ -120,7 +120,7 @@
             evothings.ble.writeCharacteristic(
                 app.device,
                 characteristic,
-                messageInput.value, // Buffer view with data to write
+                stringToBytes(messageInput.value), // Buffer view with data to write
                 function () {
                     alert('characteristic written');
                 },
@@ -156,6 +156,10 @@
             );
         },
         disconnect: function(event) {
+            app.deviceId = null;
+
+            return;
+
             ble.disconnect(app.deviceId, app.showMainPage, app.onError);
         },
         showMainPage: function() {
