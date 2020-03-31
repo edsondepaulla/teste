@@ -19,7 +19,19 @@
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
+            <br>
+            <br>
+            Array:
+            <input type="text" id="array" value="0"/>
+
+            <br>
+            <br>
+            Tipo envio:
             <input type="text" id="teste" value="1"/>
+
+            <br>
+            <br>
+            Message:
             <input type="text" id="messageInput" value="1"/>
             <button id="sendButton">Send</button>
         </div>
@@ -96,18 +108,21 @@
                     app.deviceId,
                     function (peripheral) {
                         alert('entrou 2');
-                        var characteristic = peripheral.characteristics.filter(function (element) {
-                            if(element.properties.indexOf('WriteWithoutResponse') > -1){
-                                return element;
-                            }
+                        var x = 0;
+                        var xxx = peripheral.characteristics.filter(function (element) {
+                            resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(characteristic);
+                            resultDiv.scrollTop = resultDiv.scrollHeight;
+                            x++;
                         })[0];
+
+                        var characteristic = peripheral.characteristics[parseInt(array.value)];
 
                         app.service = characteristic.service;
                         app.characteristics = characteristic.characteristic;
 
-                        alert(app.service+' ---- '+app.characteristics);
+                        /*alert(app.service+' ---- '+app.characteristics);
 
-                        alert(JSON.stringify(characteristic));
+                        alert(JSON.stringify(characteristic));*/
 
                         /*alert(peripheral.services[0]);
                         alert(peripheral.characteristics[0]['characteristic']);*/
@@ -172,8 +187,8 @@
                 resultDiv.scrollTop = resultDiv.scrollHeight;
             };
 
-            var failure = function() {
-                alert("Failed writing data to the bluefruit le");
+            var failure = function(e) {
+                alert("Failed writing data to the - " + e);
             };
 
             var data = stringToBytes(messageInput.value);
