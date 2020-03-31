@@ -27,12 +27,12 @@
         <div id="resultDiv"></div>
         <div>
             characteristic:
-            <input type="text" id="input_characteristic" value=""/>
+            <input type="text" id="input_characteristic" value="FFE1"/>
 
             <br>
             <br>
             service:
-            <input type="text" id="input_service" value=""/>
+            <input type="text" id="input_service" value="FFE0"/>
 
             <br>
             <br>
@@ -213,6 +213,10 @@
         sendData: function() { // send data to Arduino
             alert('Enviando msg: ' + messageInput.value);
 
+            var string = "Write Hello World";
+            var bytes = bluetoothle.stringToBytes(string);
+            var encodedString = bluetoothle.bytesToEncodedString(bytes);
+
             bluetoothle.write(
                 function (result) {
                     resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
@@ -222,7 +226,7 @@
                 },
                 {
                     "characteristic": input_characteristic.value,
-                    "value": stringToBytes(messageInput.value),
+                    "value": encodedString,
                     "service": input_service.value,
                     "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
                 }
