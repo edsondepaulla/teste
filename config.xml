@@ -36,7 +36,7 @@
   <platform name="android">
       <allow-intent href="market:*" />
   </platform>
-  <!--<platform name="ios">
+  <platform name="ios">
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
     <preference name="DisallowOverscroll" value="false" />
@@ -54,7 +54,7 @@
     <edit-config target="NSLocationAlwaysUsageDescription" file="*-Info.plist" mode="merge">
       <string>Permissões de acesso</string>
     </edit-config>
-  </platform>-->
+  </platform>
   <engine name="ios" spec="^5.0.1" />
   <engine name="android" spec="~8.0.0" />
   <plugin name="cordova-plugin-ios-non-exempt-encryption" />
