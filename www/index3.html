@@ -121,14 +121,14 @@
 
         },
         onData: function(data) { // data received from Arduino
-            console.log(data);
+            alert(data);
             resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
             resultDiv.scrollTop = resultDiv.scrollHeight;
         },
         sendData: function(event) { // send data to Arduino
 
             var success = function() {
-                console.log("success");
+                alert("success");
                 resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
                 resultDiv.scrollTop = resultDiv.scrollHeight;
             };
