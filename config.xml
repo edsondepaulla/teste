@@ -33,14 +33,9 @@
   <preference name="ios-version" value="cli-10.0.0" />
   <preference name="SwiftVersion" value="3.0" />
   <preference name="android-build-tool" value="gradle" />
-  <platform name="android">
+  <!--<platform name="android">
     <allow-intent href="market:*" />
-    <edit-config target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-      <uses-permission android:name="android.permission.BLUETOOTH"/>
-      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    </edit-config>
-  </platform>
+  </platform>-->
   <platform name="ios">
     <allow-intent href="itms:*" />
     <allow-intent href="itms-apps:*" />
@@ -69,10 +64,10 @@
       </array>
     </edit-config>
     <edit-config target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
-      <string>$TEXT</string>
+      <string>Permissões de acesso</string>
     </edit-config>
     <edit-config target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
-      <string>$TEXT</string>
+      <string>Permissões de acesso</string>
     </edit-config>
   </platform>
   <engine name="ios" spec="^5.0.1" />
