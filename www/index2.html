@@ -242,7 +242,7 @@
                     resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
                 },
                 function (result) {
-                    alert(JSON.stringify(result));
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
                 },
                 {
                     "characteristic": input_characteristic.value,
@@ -252,6 +252,35 @@
                 }
             );
 
+            bluetoothle.writeQ(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                {
+                    "characteristic": input_characteristic.value,
+                    "value": encodedString,
+                    "service": input_service.value,
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
+                }
+            );
+
+            bluetoothle.writeDescriptor(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                {
+                    "characteristic": input_characteristic.value,
+                    "value": encodedString,
+                    "service": input_service.value,
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
+                }
+            );
             return;
 
             var service = evothings.ble.getService(app.device, SERVICE_UUID)
