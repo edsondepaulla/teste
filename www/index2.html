@@ -12,15 +12,13 @@
 <div class="app">
     <h1>BluefruitLE</h1>
     <div id="mainPage">
-        <ul id="deviceList">
-        </ul>
         <button id="refreshButton">Refresh</button>
     </div>
     <div id="detailPage">
         <div id="resultDiv"></div>
         <div>
-            <input type="text" id="messageInput" value="Hello"/>
-            <button id="sendButton">Send</button>
+            <button id="sendButton1">Send 1</button>
+            <button id="sendButton0">Send 0</button>
         </div>
         <button id="disconnectButton">Disconnect</button>
     </div>
@@ -50,6 +48,7 @@
     };
 
     var app = {
+        deviceId: null,
         initialize: function() {
             this.bindEvents();
             detailPage.hidden = true;
@@ -57,50 +56,31 @@
         bindEvents: function() {
             document.addEventListener('deviceready', this.onDeviceReady, false);
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
-            sendButton.addEventListener('click', this.sendData, false);
+            sendButton1.addEventListener('click', this.sendData1, false);
+            sendButton0.addEventListener('click', this.sendData0, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
-            deviceList.addEventListener('touchstart', this.connect, false); // assume not scrolling
         },
         onDeviceReady: function() {
             app.refreshDeviceList();
         },
         refreshDeviceList: function() {
-            deviceList.innerHTML = ''; // empties the list
-            if (cordova.platformId === 'android') { // Android filtering is broken
-                ble.scan([], 5, app.onDiscoverDevice, app.onError);
-            } else {
-                ble.scan([], 5, app.onDiscoverDevice, app.onError);
-            }
+            ble.scan([], 5, app.onDiscoverDevice, app.onError);
         },
         onDiscoverDevice: function(device) {
-            var listItem = document.createElement('li'),
-                html = '<b>' + device.name + '</b><br/>' +
-                    'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
-                    device.id;
-
-            listItem.dataset.deviceId = device.id;
-            listItem.innerHTML = html;
-            deviceList.appendChild(listItem);
-        },
-        connect: function(e) {
-            var deviceId = e.target.dataset.deviceId,
-                onConnect = function(peripheral) {
-                    app.determineWriteType(peripheral);
-
-                    // subscribe for incoming data
-                    ble.startNotification(deviceId, bluefruit.serviceUUID, bluefruit.rxCharacteristic, app.onData, app.onError);
-                    sendButton.dataset.deviceId = deviceId;
-                    disconnectButton.dataset.deviceId = deviceId;
-                    resultDiv.innerHTML = "";
-                    app.showDetailPage();
-                };
-
-            ble.connect(deviceId, onConnect, app.onError);
+            if(device.name == 'market4u') {
+                app.deviceId = device.id;
+                ble.connect(
+                    app.deviceId,
+                    function(peripheral) {
+                        app.determineWriteType(peripheral);
+                        ble.startNotification(app.deviceId, bluefruit.serviceUUID, bluefruit.rxCharacteristic, app.onData, app.onError);
+                        app.showDetailPage();
+                    },
+                    app.onError
+                );
+            }
         },
         determineWriteType: function(peripheral) {
-            // Adafruit nRF8001 breakout uses WriteWithoutResponse for the TX characteristic
-            // Newer Bluefruit devices use Write Request for the TX characteristic
-
             var characteristic = peripheral.characteristics.filter(function(element) {
                 if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
                     return element;
@@ -112,18 +92,27 @@
             } else {
                 app.writeWithoutResponse = false;
             }
-
         },
         onData: function(data) { // data received from Arduino
             console.log(data);
             resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
             resultDiv.scrollTop = resultDiv.scrollHeight;
         },
-        sendData: function(event) { // send data to Arduino
-
-            var success = function() {
+        sendData0: function() {
+            app.sendData(0);
+        },
+        sendData1: function() {
+            app.sendData(1);
+        },
+        sendData: function(value) {
+            var successwriteWithoutResponse = function() {
                 console.log("success");
-                resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
+                resultDiv.innerHTML = resultDiv.innerHTML + "Sent writeWithoutResponse: " + value + "<br/>";
+                resultDiv.scrollTop = resultDiv.scrollHeight;
+            };
+            var successwrite = function() {
+                console.log("success");
+                resultDiv.innerHTML = resultDiv.innerHTML + "Sent write: " + value + "<br/>";
                 resultDiv.scrollTop = resultDiv.scrollHeight;
             };
 
@@ -131,29 +120,25 @@
                 alert("Failed writing data to the bluefruit le");
             };
 
-            var data = stringToBytes(messageInput.value);
-            var deviceId = event.target.dataset.deviceId;
-
             if (app.writeWithoutResponse) {
                 ble.writeWithoutResponse(
-                    deviceId,
+                    app.deviceId,
                     bluefruit.serviceUUID,
                     bluefruit.txCharacteristic,
-                    data, success, failure
+                    stringToBytes(value), successwriteWithoutResponse, failure
                 );
             } else {
                 ble.write(
-                    deviceId,
+                    app.deviceId,
                     bluefruit.serviceUUID,
                     bluefruit.txCharacteristic,
-                    data, success, failure
+                    stringToBytes(value), successwrite, failure
                 );
             }
 
         },
         disconnect: function(event) {
-            var deviceId = event.target.dataset.deviceId;
-            ble.disconnect(deviceId, app.showMainPage, app.onError);
+            ble.disconnect(app.deviceId, app.showMainPage, app.onError);
         },
         showMainPage: function() {
             mainPage.hidden = false;
