@@ -255,57 +255,6 @@
         sendData: function() { // send data to Arduino
             alert('Enviando msg: ' + messageInput.value);
 
-            var string = "Write Hello World";
-            var bytes = bluetoothle.stringToBytes(string);
-            var encodedString = bluetoothle.bytesToEncodedString(bytes);
-
-            bluetoothle.write(
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                {
-                    "characteristic": input_characteristic.value,
-                    "value": encodedString,
-                    "service": input_service.value,
-                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
-                }
-            );
-
-            bluetoothle.writeQ(
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                {
-                    "characteristic": input_characteristic.value,
-                    "value": encodedString,
-                    "service": input_service.value,
-                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
-                }
-            );
-
-            bluetoothle.writeDescriptor(
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                function (result) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
-                },
-                {
-                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78",
-                    "service": input_service.value,
-                    "characteristic": input_characteristic.value,
-                    "descriptor": input_descriptor.value,
-                    "value": encodedString
-                }
-            );
-            return;
-
             var service = evothings.ble.getService(app.device, SERVICE_UUID)
             var characteristic = evothings.ble.getCharacteristic(service, CHARACTERISTIC_UUID)
 
