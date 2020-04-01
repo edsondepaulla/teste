@@ -100,8 +100,11 @@
 
             var characteristic_get = app.characteristics[parseInt(array.value)];
 
-            var service = characteristic_get.service;
-            var characteristic = characteristic_get.characteristic;
+            //var service = 'ffe0';//characteristic_get.service;
+            //var characteristic = 'ffe1';//characteristic_get.characteristic;
+
+            var service = 0xffe0;
+            var characteristic = 0xffe1;
 
             ble.write(
                 app.deviceId,
