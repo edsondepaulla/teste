@@ -59,7 +59,8 @@
             ble.connect(
                 bluetooth.deviceId,
                 function (peripheral) {
-                    app.determineWriteType(peripheral);
+                    bluetooth.determineWriteType(peripheral);
+                    resultDiv.innerHTML = resultDiv.innerHTML + "Conectado<br/>";
                     ble.startNotification(
                         bluetooth.deviceId,
                         'ffe0',
@@ -68,7 +69,7 @@
                             resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
                             resultDiv.scrollTop = resultDiv.scrollHeight;
                         },
-                        app.onError
+                        bluetooth.onError
                     );
                     bluetooth.showDetailPage();
                 },
@@ -82,9 +83,9 @@
                 }
             })[0];
             if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
-                app.writeWithoutResponse = true;
+                bluetooth.writeWithoutResponse = true;
             } else {
-                app.writeWithoutResponse = false;
+                bluetooth.writeWithoutResponse = false;
             }
         },
         sendData0: function () {
@@ -94,11 +95,12 @@
             bluetooth.sendData('1');
         },
         sendData: function (value) {
+            alert(value);
             var array = new Uint8Array(value.length);
             for (var i = 0, l = value.length; i < l; i++)
                 array[i] = value.charCodeAt(i);
 
-            if (app.writeWithoutResponse) {
+            if (bluetooth.writeWithoutResponse) {
                 ble.writeWithoutResponse(
                     bluetooth.deviceId,
                     'ffe0',
