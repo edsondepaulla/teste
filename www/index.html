@@ -96,7 +96,7 @@
                 alert("Failed writing data to the - " + e);
             };
 
-            var data = stringToBytes(messageInput.value);
+            var data = stringToBytes(parseInt(messageInput.value)?1:0);
 
             var characteristic_get = app.characteristics[parseInt(array.value)];
 
