@@ -90,7 +90,7 @@
   <plugin name="phonegap-plugin-barcodescanner" />
   <plugin name="cordova-plugin-ble-central"/>
 
-  <plugin name="cordova-diagnostic-plugin"/>
+  <plugin name="cordova.diagnostic.plugin"/>
 
   <plugin name="cordova-plugin-background-mode-bluetooth-central" />
 
