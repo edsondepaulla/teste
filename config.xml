@@ -85,9 +85,26 @@
   <plugin name="phonegap-plugin-barcodescanner" />
   <!--<plugin name="cordova-plugin-bluetoothle" />-->
   <!--<plugin name="cordova-plugin-ble-central" />-->
-  <plugin name="cordova-plugin-background-mode-bluetooth-central" />
-  <plugin name="cordova-plugin-background-mode-bluetooth-peripheral" />
-  <plugin name="cordova-plugin-bluetooth-peripheral-usage-description" />
+
+  <plugin name="cordova-plugin-background-mode-bluetooth-central">
+    <params>
+      <param name="APP_ID" value="br.com.mobile.market4u" />
+      <param name="APP_NAME" value="market4u" />
+    </params>
+  </plugin>
+  <plugin name="cordova-plugin-background-mode-bluetooth-peripheral">
+    <params>
+      <param name="APP_ID" value="br.com.mobile.market4u" />
+      <param name="APP_NAME" value="market4u" />
+    </params>
+  </plugin>
+  <plugin name="cordova-plugin-bluetooth-peripheral-usage-description">
+    <params>
+      <param name="APP_ID" value="br.com.mobile.market4u" />
+      <param name="APP_NAME" value="market4u" />
+    </params>
+  </plugin>
+
   <plugin name="cordova-plugin-bluetoothle" />
   <plugin name="cordova-plugin-device" />
   <plugin name="cordova-plugin-customurlscheme" spec="5.0.0">
