@@ -43,11 +43,10 @@
         return array.buffer;
     }
 
-    // this is Nordic's UART service
     var bluefruit = {
-        serviceUUID: '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
-        txCharacteristic: '6e400002-b5a3-f393-e0a9-e50e24dcca9e', // transmit is from the phone's perspective
-        rxCharacteristic: '6e400003-b5a3-f393-e0a9-e50e24dcca9e'  // receive is from the phone's perspective
+        serviceUUID: 'ffe0',
+        txCharacteristic: 'ffe1', // transmit is from the phone's perspective
+        rxCharacteristic: 'ffe1'  // receive is from the phone's perspective
     };
 
     var app = {
@@ -70,7 +69,7 @@
             if (cordova.platformId === 'android') { // Android filtering is broken
                 ble.scan([], 5, app.onDiscoverDevice, app.onError);
             } else {
-                ble.scan([bluefruit.serviceUUID], 5, app.onDiscoverDevice, app.onError);
+                ble.scan([], 5, app.onDiscoverDevice, app.onError);
             }
         },
         onDiscoverDevice: function(device) {
