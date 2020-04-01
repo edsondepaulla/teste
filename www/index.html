@@ -57,28 +57,6 @@
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
-            try {
-                cordova.plugins.diagnostic.requestRuntimePermission(function (status) {
-                    switch (status) {
-                        case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                            alert("Permission granted to use the bluetooth");
-                            break;
-                        case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
-                            alert("Permission to use the bluetooth has not been requested yet");
-                            break;
-                        case cordova.plugins.diagnostic.permissionStatus.DENIED_ONCe:
-                            alert("Permission denied to use the bluetooth - ask again?");
-                            break;
-                        case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
-                            alert("Permission permanently denied to use the bluetooth - guess we won't be using it then!");
-                            break;
-                    }
-                }, function (error) {
-                    alert("The following error occurred: " + error);
-                }, cordova.plugins.diagnostic.permission.BLUETOOTH);
-            } catch (e) {
-
-            }
             app.refreshDeviceList();
         },
         refreshDeviceList: function() {
@@ -86,14 +64,15 @@
         },
         onDiscoverDevice: function(device) {
             if(device.name == 'Soft ATm') {
-                alert('entrou');
+
+                resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(device);
+
                 app.deviceId = device.id;
                 ble.connect(
                     app.deviceId,
                     function (peripheral) {
-                        //resultDiv.innerHTML = JSON.stringify(device)+"<br><br>"+JSON.stringify(peripheral)+"<br><br>";
+                        resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(peripheral);
 
-                        alert('entrou 2');
                         var x = 0;
                         var xxx = peripheral.characteristics.filter(function (element) {
                             resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(element);
