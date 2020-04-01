@@ -22,6 +22,7 @@
         <button id="requestPermission">requestPermission</button>
         <button id="characteristics">characteristics</button>
         <button id="services">services</button>
+        <button id="descriptors">descriptors</button>
         <button id="bond">bond</button>
     </div>
     <div id="detailPage">
@@ -34,6 +35,11 @@
             <br>
             service:
             <input type="text" id="input_service" value="FFE0"/>
+
+            <br>
+            <br>
+            descriptor:
+            <input type="text" id="input_descriptor" value=""/>
 
             <br>
             <br>
@@ -80,6 +86,7 @@
             requestPermission.addEventListener('click', this.requestPermission, false);
             characteristics.addEventListener('click', this.characteristicsF, false);
             services.addEventListener('click', this.services, false);
+            descriptors.addEventListener('click', this.descriptors, false);
             bond.addEventListener('click', this.bond, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
@@ -180,6 +187,21 @@
                 }
             );
         },
+        descriptors: function(){
+            bluetoothle.descriptors(
+                function (result) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "<br><br>" + JSON.stringify(result);
+                },
+                function (result) {
+                    alert(JSON.stringify(result));
+                },
+                {
+                    "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78",
+                    "characteristic": input_characteristic.value,
+                    "service": input_service.value,
+                }
+            );
+        },
         services: function(){
             bluetoothle.services(
                 function (result) {
@@ -248,6 +270,7 @@
                     "characteristic": input_characteristic.value,
                     "value": encodedString,
                     "service": input_service.value,
+                    "type": "noResponse",
                     "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
                 }
             );
@@ -263,6 +286,7 @@
                     "characteristic": input_characteristic.value,
                     "value": encodedString,
                     "service": input_service.value,
+                    "type": "noResponse",
                     "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
                 }
             );
@@ -278,6 +302,7 @@
                     "characteristic": input_characteristic.value,
                     "value": encodedString,
                     "service": input_service.value,
+                    "descriptor": input_descriptor.value,
                     "address": "20EBB795-A0E4-A0E3-5E7C-2BF59DFD9B78"
                 }
             );
