@@ -64,15 +64,14 @@
         },
         onDiscoverDevice: function(device) {
             if(device.name == 'Soft ATm') {
-
-                resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(device);
-
+                alert('entrou');
                 app.deviceId = device.id;
                 ble.connect(
                     app.deviceId,
                     function (peripheral) {
-                        resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(peripheral);
+                        resultDiv.innerHTML = JSON.stringify(device)+"<br><br>"+JSON.stringify(peripheral)+"<br><br>";
 
+                        alert('entrou 2');
                         var x = 0;
                         var xxx = peripheral.characteristics.filter(function (element) {
                             resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(element);
