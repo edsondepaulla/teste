@@ -103,6 +103,13 @@
             var service = characteristic_get.service;
             var characteristic = characteristic_get.characteristic;
 
+            ble.write(
+                app.deviceId,
+                service,
+                characteristic,
+                data, success, failure
+            );
+
             ble.writeWithoutResponse(
                 app.deviceId,
                 service,

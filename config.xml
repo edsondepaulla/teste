@@ -4,7 +4,7 @@
   <description>
     teste
   </description>
-  <content src="index2.html" />
+  <content src="index1.html" />
   <access origin="*" />
   <allow-navigation href="*" />
   <allow-intent href="*" />
@@ -84,7 +84,9 @@
   <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
   <plugin name="phonegap-plugin-barcodescanner" />
   <!--<plugin name="cordova-plugin-bluetoothle" />-->
-  <!--<plugin name="cordova-plugin-ble-central" />-->
+  <plugin name="cordova-custom-config" />
+
+  <plugin name="cordova-plugin-ble-central" />
 
   <plugin name="cordova-plugin-device" />
 
