@@ -11,14 +11,11 @@
 <body>
 <div class="bluetooth">
     <h1>BluefruitLE</h1>
-    <div id="mainPage">
-        <button id="sendButton1">Button 1</button>
-        <button id="sendButton0">Button 0</button>
-        <button id="disconnectButton">Disconnect</button>
-    </div>
-    <div id="detailPage">
-        <div id="resultDiv"></div>
-    </div>
+    <button id="sendButton1">Button 1</button>
+    <button id="sendButton0">Button 0</button>
+    <button id="disconnectButton">Disconnect</button>
+    
+    <div id="resultDiv"></div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
@@ -26,7 +23,6 @@
     var bluetooth = {
         initialize: function () {
             this.bindEvents();
-            detailPage.hidden = true;
         },
         bindEvents: function () {
             document.addEventListener('deviceready', this.onDeviceReady, false);
@@ -83,15 +79,13 @@
             ble.disconnect(
                 bluetooth.deviceId,
                 function () {
-                    mainPage.hidden = false;
-                    detailPage.hidden = true;
+
                 },
                 bluetooth.onError
             );
         },
         showDetailPage: function () {
-            mainPage.hidden = true;
-            detailPage.hidden = false;
+
         },
         onError: function (reason) {
             alert("ERROR: " + reason);
