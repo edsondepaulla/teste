@@ -71,7 +71,7 @@
                 blePeripheral.publishService(SERVICE_UUID),
                 blePeripheral.startAdvertising(SERVICE_UUID, 'UART')
             ]).then(
-                function() { console.log ('Created UART Service'); },
+                function() { alert ('Created UART Service'); },
                 app.onError
             );
 
@@ -116,7 +116,7 @@
                 blePeripheral.createServiceFromJSON(uartService),
                 blePeripheral.startAdvertising(uartService.uuid, 'UART')
             ]).then(
-                function() { console.log ('Created UART Service'); },
+                function() { alert ('Created UART Service'); },
                 app.onError
             );
         },
@@ -126,10 +126,10 @@
 
             var success = function() {
                 outputDiv.innerHTML += messageInput.value + '<br/>';
-                console.log('Updated RX value to ' + input.value);
+                alert('Updated RX value to ' + input.value);
             };
             var failure = function() {
-                console.log('Error updating RX value.');
+                alert('Error updating RX value.');
             };
 
             blePeripheral.setCharacteristicValue(SERVICE_UUID, RX_UUID, bytes).
@@ -138,12 +138,12 @@
         },
         didReceiveWriteRequest: function(request) {
             var message = bytesToString(request.value);
-            console.log(message);
+            alert(message);
             // warning: message should be escaped to avoid javascript injection
             outputDiv.innerHTML += '<i>' + message + '</i><br/>';
         },
         onBluetoothStateChange: function(state) {
-            console.log('Bluetooth State is', state);
+            alert('Bluetooth State is', state);
             outputDiv.innerHTML += 'Bluetooth  is ' +  state + '<br/>';
         }
     };
