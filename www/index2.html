@@ -6,11 +6,11 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,  target-densitydpi=device-dpi" />
 
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>BluefruitLE</title>
+    <title>market4u</title>
 </head>
 <body>
 <div class="app">
-    <h1>BluefruitLE</h1>
+    <h1>market4u</h1>
     <div id="mainPage">
         <button id="refreshButton">Refresh</button>
     </div>
@@ -26,28 +26,7 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
     'use strict';
-
-    // ASCII only
-    function bytesToString(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
-
-    // ASCII only
-    function stringToBytes(string) {
-        var array = new Uint8Array(string.length);
-        for (var i = 0, l = string.length; i < l; i++) {
-            array[i] = string.charCodeAt(i);
-        }
-        return array.buffer;
-    }
-
-    var bluefruit = {
-        serviceUUID: 'ffe0',
-        txCharacteristic: 'ffe1', // transmit is from the phone's perspective
-        rxCharacteristic: 'ffe1'  // receive is from the phone's perspective
-    };
-
-    var app = {
+    var bluetooth = {
         deviceId: null,
         initialize: function() {
             this.bindEvents();
@@ -72,31 +51,11 @@
                 ble.connect(
                     app.deviceId,
                     function(peripheral) {
-                        app.determineWriteType(peripheral);
-                        ble.startNotification(app.deviceId, bluefruit.serviceUUID, bluefruit.rxCharacteristic, app.onData, app.onError);
                         app.showDetailPage();
                     },
                     app.onError
                 );
             }
-        },
-        determineWriteType: function(peripheral) {
-            var characteristic = peripheral.characteristics.filter(function(element) {
-                if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
-                    return element;
-                }
-            })[0];
-
-            if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
-                app.writeWithoutResponse = true;
-            } else {
-                app.writeWithoutResponse = false;
-            }
-        },
-        onData: function(data) { // data received from Arduino
-            console.log(data);
-            resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
-            resultDiv.scrollTop = resultDiv.scrollHeight;
         },
         sendData0: function() {
             app.sendData('0');
@@ -105,54 +64,42 @@
             app.sendData('1');
         },
         sendData: function(value) {
-            var successwriteWithoutResponse = function() {
-                console.log("success");
-                resultDiv.innerHTML = resultDiv.innerHTML + "Sent writeWithoutResponse: " + value + "<br/>";
-                resultDiv.scrollTop = resultDiv.scrollHeight;
-            };
-            var successwrite = function() {
-                console.log("success");
-                resultDiv.innerHTML = resultDiv.innerHTML + "Sent write: " + value + "<br/>";
-                resultDiv.scrollTop = resultDiv.scrollHeight;
-            };
-
-            var failure = function() {
-                alert("Failed writing data to the bluefruit le");
-            };
-
-            if (app.writeWithoutResponse) {
-                ble.writeWithoutResponse(
-                    app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
-                    stringToBytes(value), successwriteWithoutResponse, failure
-                );
-            } else {
-                ble.write(
-                    app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
-                    stringToBytes(value), successwrite, failure
-                );
+            var array = new Uint8Array(value.length);
+            for (var i = 0, l = value.length; i < l; i++) {
+                array[i] = value.charCodeAt(i);
             }
-
+            ble.writeWithoutResponse(
+                app.deviceId,
+                'ffe0',
+                'ffe1',
+                array.buffer,
+                function () {
+                    console.log("success");
+                },
+                function () {
+                    alert("FALHA CONECTAR MARKET4U");
+                }
+            );
         },
         disconnect: function(event) {
-            ble.disconnect(app.deviceId, app.showMainPage, app.onError);
-        },
-        showMainPage: function() {
-            mainPage.hidden = false;
-            detailPage.hidden = true;
+            ble.disconnect(
+                app.deviceId,
+                function() {
+                    mainPage.hidden = false;
+                    detailPage.hidden = true;
+                },
+                app.onError
+            );
         },
         showDetailPage: function() {
             mainPage.hidden = true;
             detailPage.hidden = false;
         },
         onError: function(reason) {
-            alert("ERROR: " + reason); // real apps should use notification.alert
+            alert("ERROR: " + reason);
         }
     };
-    app.initialize();
+    bluetooth.initialize();
 </script>
 </body>
 </html>
