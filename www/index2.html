@@ -13,8 +13,9 @@
     <h1>BluefruitLE</h1>
     <button id="sendButton1">Button 1</button>
     <button id="sendButton0">Button 0</button>
+    <button id="refreshButton">Update</button>
     <button id="disconnectButton">Disconnect</button>
-    
+
     <div id="resultDiv"></div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
@@ -27,8 +28,8 @@
         bindEvents: function () {
             document.addEventListener('deviceready', this.onDeviceReady, false);
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
-            sendButton1.addEventListener('click', this.sendData1, false);
-            sendButton0.addEventListener('click', this.sendData0, false);
+            sendButton1.addEventListener('touchstart', this.sendData1, false);
+            sendButton0.addEventListener('touchstart', this.sendData0, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function () {
@@ -46,6 +47,7 @@
             ble.connect(
                 bluetooth.deviceId,
                 function (peripheral) {
+                    resultDiv.innerHTML = JSON.stringify(peripheral) + "<br/>";
                     bluetooth.showDetailPage();
                 },
                 bluetooth.onError
