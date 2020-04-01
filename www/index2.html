@@ -9,141 +9,95 @@
     <title>BluefruitLE</title>
 </head>
 <body>
-<div class="app">
+<div class="bluetooth">
     <h1>BluefruitLE</h1>
     <div id="mainPage">
-        <button id="refreshButton">Refresh</button>
+        <button id="sendButton1">Button 1</button>
+        <button id="sendButton0">Button 0</button>
+        <button id="disconnectButton">Disconnect</button>
     </div>
     <div id="detailPage">
         <div id="resultDiv"></div>
-        <div>
-            <input type="text" id="messageInput" value="Hello"/>
-            <button id="sendButton">Send</button>
-        </div>
-        <button id="disconnectButton">Disconnect</button>
     </div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
     'use strict';
-
-    // ASCII only
-    function bytesToString(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
-
-    // ASCII only
-    function stringToBytes(string) {
-        var array = new Uint8Array(string.length);
-        for (var i = 0, l = string.length; i < l; i++) {
-            array[i] = string.charCodeAt(i);
-        }
-        return array.buffer;
-    }
-
-    var bluefruit = {
-        serviceUUID: 'ffe0',
-        txCharacteristic: 'ffe1', // transmit is from the phone's perspective
-        rxCharacteristic: 'ffe1'  // receive is from the phone's perspective
-    };
-
-    var app = {
-        initialize: function() {
+    var bluetooth = {
+        initialize: function () {
             this.bindEvents();
             detailPage.hidden = true;
         },
-        bindEvents: function() {
+        bindEvents: function () {
             document.addEventListener('deviceready', this.onDeviceReady, false);
             refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
-            sendButton.addEventListener('click', this.sendData, false);
+            sendButton1.addEventListener('click', this.sendData1, false);
+            sendButton0.addEventListener('click', this.sendData0, false);
             disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
-        onDeviceReady: function() {
-            app.refreshDeviceList();
+        onDeviceReady: function () {
+            bluetooth.refreshDeviceList();
         },
-        refreshDeviceList: function() {
-            ble.scan([], 5, app.onDiscoverDevice, app.onError);
+        refreshDeviceList: function () {
+            ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
-        onDiscoverDevice: function(device) {
+        onDiscoverDevice: function (device) {
             if (device.name == 'market4u')
-                app.connect(device.id);
+                bluetooth.connect(device.id);
         },
-        connect: function(id) {
-            app.deviceId = id;
-            var onConnect = function (peripheral) {
-                app.determineWriteType(peripheral);
-                ble.startNotification(app.deviceId, bluefruit.serviceUUID, bluefruit.rxCharacteristic, app.onData, app.onError);
-                app.showDetailPage();
-            };
-            ble.connect(app.deviceId, onConnect, app.onError);
+        connect: function (id) {
+            bluetooth.deviceId = id;
+            ble.connect(
+                bluetooth.deviceId,
+                function (peripheral) {
+                    bluetooth.showDetailPage();
+                },
+                bluetooth.onError
+            );
         },
-        determineWriteType: function(peripheral) {
-            var characteristic = peripheral.characteristics.filter(function(element) {
-                if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
-                    return element;
+        sendData0: function () {
+            bluetooth.sendData('0');
+        },
+        sendData1: function () {
+            bluetooth.sendData('1');
+        },
+        sendData: function (value) {
+            var array = new Uint8Array(value.length);
+            for (var i = 0, l = value.length; i < l; i++)
+                array[i] = value.charCodeAt(i);
+            ble.writeWithoutResponse(
+                bluetooth.deviceId,
+                'ffe0',
+                'ffe1',
+                array.buffer,
+                function () {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "Sent writeWithoutResponse: " + value + "<br/>";
+                    resultDiv.scrollTop = resultDiv.scrollHeight;
+                },
+                function () {
+                    alert("FALHA");
                 }
-            })[0];
-            if (characteristic.properties.indexOf('WriteWithoutResponse') > -1) {
-                app.writeWithoutResponse = true;
-            } else {
-                app.writeWithoutResponse = false;
-            }
-
+            );
         },
-        onData: function(data) { // data received from Arduino
-            console.log(data);
-            resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
-            resultDiv.scrollTop = resultDiv.scrollHeight;
+        disconnect: function (event) {
+            ble.disconnect(
+                bluetooth.deviceId,
+                function () {
+                    mainPage.hidden = false;
+                    detailPage.hidden = true;
+                },
+                bluetooth.onError
+            );
         },
-        sendData: function() {
-            var data = stringToBytes(messageInput.value);
-            if (app.writeWithoutResponse) {
-                ble.writeWithoutResponse(
-                    app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
-                    data,
-                    function() {
-                        resultDiv.innerHTML = resultDiv.innerHTML + "Sent writeWithoutResponse: " + messageInput.value + "<br/>";
-                        resultDiv.scrollTop = resultDiv.scrollHeight;
-                    },
-                    function() {
-                        alert("Failed writing data to the bluefruit le");
-                    }
-                );
-            } else {
-                ble.write(
-                    app.deviceId,
-                    bluefruit.serviceUUID,
-                    bluefruit.txCharacteristic,
-                    data,
-                    function() {
-                        resultDiv.innerHTML = resultDiv.innerHTML + "Sent write: " + messageInput.value + "<br/>";
-                        resultDiv.scrollTop = resultDiv.scrollHeight;
-                    },
-                    function() {
-                        alert("Failed writing data to the bluefruit le");
-                    }
-                );
-            }
-
-        },
-        disconnect: function(event) {
-            ble.disconnect(app.deviceId, app.showMainPage, app.onError);
-        },
-        showMainPage: function() {
-            mainPage.hidden = false;
-            detailPage.hidden = true;
-        },
-        showDetailPage: function() {
+        showDetailPage: function () {
             mainPage.hidden = true;
             detailPage.hidden = false;
         },
-        onError: function(reason) {
-            alert("ERROR: " + reason); // real apps should use notification.alert
+        onError: function (reason) {
+            alert("ERROR: " + reason);
         }
     };
-    app.initialize();
+    bluetooth.initialize();
 </script>
 </body>
 </html>
