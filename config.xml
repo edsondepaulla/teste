@@ -95,20 +95,7 @@
   <plugin name="cordova-plugin-background-mode-bluetooth-peripheral" />
 
   <plugin name="cordova-plugin-bluetooth-peripheral-usage-description">
-    <name>Bluetooth Peripheral Usage Description</name>
-    <description>Set Bluetooth Peripheral Usage Description on iOS</description>
-    <author>Rand Dusing</author>
-    <keywords>bluetooth,background,peripheral</keywords>
-    <license>MIT</license>
-    <preference name="TEXT" />
-    <platform name="ios">
-      <config-file target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
-        <string>$TEXT</string>
-      </config-file>
-      <config-file target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
-        <string>$TEXT</string>
-      </config-file>
-    </platform>
+      <param name="TEXT" value="xxxx" />
   </plugin>
 
   <plugin name="cordova-plugin-customurlscheme" spec="5.0.0">
