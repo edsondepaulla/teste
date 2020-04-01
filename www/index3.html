@@ -119,6 +119,24 @@
                 characteristic,
                 data, success, failure
             );
+
+
+            var service = 'ffe0';//characteristic_get.service;
+            var characteristic = 'ffe1';//characteristic_get.characteristic;
+
+            ble.write(
+                app.deviceId,
+                service,
+                characteristic,
+                data, success, failure
+            );
+
+            ble.writeWithoutResponse(
+                app.deviceId,
+                service,
+                characteristic,
+                data, success, failure
+            );
         },
         disconnect: function(event) {
             ble.disconnect(app.deviceId, app.showMainPage, app.onError);
