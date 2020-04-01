@@ -15,17 +15,10 @@
     <button id="sendButton0">Button 0</button>
     <button id="refreshButton">Update</button>
     <button id="disconnectButton">Disconnect</button>
-
-    <ul id="deviceList"></ul>
-
-    <div id="resultDiv"></div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
     'use strict';
-    function bytesToString(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
     var bluetooth = {
         initialize: function () {
             this.bindEvents();
@@ -41,39 +34,27 @@
             bluetooth.refreshDeviceList();
         },
         refreshDeviceList: function () {
-            deviceList.innerHTML = '';
             ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
         onDiscoverDevice: function (device) {
-            var listItem = document.createElement('li'),
-                html = '<b>' + device.name + '</b><br/>' +
-                    'RSSI: ' + device.rssi + '&nbsp;|&nbsp;' +
-                    device.id;
-            listItem.innerHTML = html;
-            deviceList.appendChild(listItem);
-            if (device.name == 'market4u')
-                bluetooth.connect(device.id);
-        },
-        connect: function (id) {
-            bluetooth.deviceId = id;
-            ble.connect(
-                bluetooth.deviceId,
-                function (peripheral) {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "Conectado<br/>";
-                    ble.startNotification(
-                        bluetooth.deviceId,
-                        'ffe0',
-                        'ffe1',
-                        function(data) {
-                            resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
-                            resultDiv.scrollTop = resultDiv.scrollHeight;
-                        },
-                        bluetooth.onError
-                    );
-                    bluetooth.showDetailPage();
-                },
-                bluetooth.onError
-            );
+            if (device.name == 'market4u') {
+                bluetooth.deviceId = device.id;
+                ble.connect(
+                    bluetooth.deviceId,
+                    function () {
+                        ble.startNotification(
+                            bluetooth.deviceId,
+                            'ffe0',
+                            'ffe1',
+                            function (data) {
+
+                            },
+                            bluetooth.onError
+                        );
+                    },
+                    bluetooth.onError
+                );
+            }
         },
         sendData0: function () {
             bluetooth.sendData('0');
@@ -91,8 +72,7 @@
                 'ffe1',
                 array.buffer,
                 function () {
-                    resultDiv.innerHTML = resultDiv.innerHTML + "Sent writeWithoutResponse: " + value + "<br/>";
-                    resultDiv.scrollTop = resultDiv.scrollHeight;
+
                 },
                 function () {
                     alert("FALHA");
@@ -107,9 +87,6 @@
                 },
                 bluetooth.onError
             );
-        },
-        showDetailPage: function () {
-
         },
         onError: function (reason) {
             alert("ERROR: " + reason);
