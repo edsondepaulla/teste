@@ -23,6 +23,9 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
     'use strict';
+    function bytesToString(buffer) {
+        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+    }
     var bluetooth = {
         initialize: function () {
             this.bindEvents();
@@ -56,6 +59,17 @@
             ble.connect(
                 bluetooth.deviceId,
                 function (peripheral) {
+                    resultDiv.innerHTML = resultDiv.innerHTML + "Conectado<br/>";
+                    ble.startNotification(
+                        bluetooth.deviceId,
+                        'ffe0',
+                        'ffe1',
+                        function(data) {
+                            resultDiv.innerHTML = resultDiv.innerHTML + "Received: " + bytesToString(data) + "<br/>";
+                            resultDiv.scrollTop = resultDiv.scrollHeight;
+                        },
+                        bluetooth.onError
+                    );
                     bluetooth.showDetailPage();
                 },
                 bluetooth.onError
