@@ -9,20 +9,33 @@
     <title>TESTE</title>
 </head>
 <body>
-<h2>UART</h2>
-<div>
-    <input type="text" id="messageInput" value="Hello" />
-    <span id="sendButton">Send</span>
-    <div id="outputDiv"></div>
+<div class="app">
+    <h1>TESTE</h1>
+    <div id="mainPage">
+        <ul id="deviceList">
+        </ul>
+        <button id="refreshButton">Refresh</button>
+    </div>
+    <div id="detailPage">
+        <div id="resultDiv"></div>
+        <div>
+            Array:
+            <input type="text" id="array" value="0"/>
+
+            <br>
+            <br>
+            Message:
+            <input type="text" id="messageInput" value="1"/>
+            <button id="sendButton">Send</button>
+        </div>
+        <button id="disconnectButton">Disconnect</button>
+    </div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
-    // only works for ASCII characters
-    function bytesToString(buffer) {
-        return String.fromCharCode.apply(null, new Uint8Array(buffer));
-    }
+    'use strict';
 
-    // only works for ASCII characters
+    // ASCII only
     function stringToBytes(string) {
         var array = new Uint8Array(string.length);
         for (var i = 0, l = string.length; i < l; i++) {
@@ -31,123 +44,92 @@
         return array.buffer;
     }
 
-    // Nordic UART Service
-    var SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E';
-    var TX_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E';
-    var RX_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E';
-
     var app = {
-        // Application Constructor
+        deviceId: null,
+        characteristics: null,
         initialize: function() {
             this.bindEvents();
         },
         bindEvents: function() {
             document.addEventListener('deviceready', this.onDeviceReady, false);
-            sendButton.addEventListener('touchstart', this.updateCharacteristicValue, false);
+            refreshButton.addEventListener('touchstart', this.refreshDeviceList, false);
+            sendButton.addEventListener('click', this.sendData, false);
+            disconnectButton.addEventListener('touchstart', this.disconnect, false);
         },
         onDeviceReady: function() {
-            var property = blePeripheral.properties;
-            var permission = blePeripheral.permissions;
-
-            blePeripheral.onWriteRequest(app.didReceiveWriteRequest);
-            blePeripheral.onBluetoothStateChange(app.onBluetoothStateChange);
-
-            // 2 different ways to create the service: API calls or JSON
-            //app.createService();
-            app.createServiceJSON();
-
+            app.refreshDeviceList();
         },
-        createService: function() {
-            // https://learn.adafruit.com/introducing-the-adafruit-bluefruit-le-uart-friend/uart-service
-            // Characteristic names are assigned from the point of view of the Central device
-
-            var property = blePeripheral.properties;
-            var permission = blePeripheral.permissions;
-
-            Promise.all([
-                blePeripheral.createService(SERVICE_UUID),
-                blePeripheral.addCharacteristic(SERVICE_UUID, TX_UUID, property.WRITE, permission.WRITEABLE),
-                blePeripheral.addCharacteristic(SERVICE_UUID, RX_UUID, property.READ | property.NOTIFY, permission.READABLE),
-                blePeripheral.publishService(SERVICE_UUID),
-                blePeripheral.startAdvertising(SERVICE_UUID, 'UART')
-            ]).then(
-                function() { alert ('Created UART Service'); },
-                app.onError
-            );
-
-            blePeripheral.onWriteRequest(app.didReceiveWriteRequest);
+        refreshDeviceList: function() {
+            ble.scan([], 5, app.onDiscoverDevice, app.onError);
         },
-        createServiceJSON: function() {
-            // https://learn.adafruit.com/introducing-the-adafruit-bluefruit-le-uart-friend/uart-service
-            // Characteristic names are assigned from the point of view of the Central device
+        onDiscoverDevice: function(device) {
+            if(device.name == 'Soft ATm') {
+                alert('entrou');
+                app.deviceId = device.id;
+                ble.connect(
+                    app.deviceId,
+                    function (peripheral) {
+                        //resultDiv.innerHTML = JSON.stringify(device)+"<br><br>"+JSON.stringify(peripheral)+"<br><br>";
 
-            var property = blePeripheral.properties;
-            var permission = blePeripheral.permissions;
+                        alert('entrou 2');
+                        var x = 0;
+                        var xxx = peripheral.characteristics.filter(function (element) {
+                            resultDiv.innerHTML = resultDiv.innerHTML + "<br>"+x+" - " + JSON.stringify(element);
+                            resultDiv.scrollTop = resultDiv.scrollHeight;
+                            x++;
+                        })[0];
 
-            var uartService = {
-                uuid: SERVICE_UUID,
-                characteristics: [
-                    {
-                        uuid: TX_UUID,
-                        properties: property.WRITE,
-                        permissions: permission.WRITEABLE,
-                        descriptors: [
-                            {
-                                uuid: '2901',
-                                value: 'Transmit'
-                            }
-                        ]
+                        app.characteristics = peripheral.characteristics;
                     },
-                    {
-                        uuid: RX_UUID,
-                        properties: property.READ | property.NOTIFY,
-                        permissions: permission.READABLE,
-                        descriptors: [
-                            {
-                                uuid: '2901',
-                                value: 'Receive'
-                            }
-                        ]
-                    }
-                ]
+                    app.onError
+                );
+            }
+        },
+        sendData: function(event) { // send data to Arduino
+            var success = function (e) {
+                alert("Ok - "+e);
+                resultDiv.innerHTML = resultDiv.innerHTML + "Sent: " + messageInput.value + "<br/>";
+                resultDiv.scrollTop = resultDiv.scrollHeight;
             };
 
-            Promise.all([
-                blePeripheral.createServiceFromJSON(uartService),
-                blePeripheral.startAdvertising(uartService.uuid, 'UART')
-            ]).then(
-                function() { alert ('Created UART Service'); },
-                app.onError
+            var failure = function (e) {
+                alert("Failed writing data to the - " + e);
+            };
+
+            var data = stringToBytes(messageInput.value);
+
+            var data = new Uint8Array(messageInput.value);
+            data[0] = event.type === 'touchstart' ? 0x1 : 0x0;
+
+            var characteristic_get = app.characteristics[parseInt(array.value)];
+
+            var service = characteristic_get.service;
+            var characteristic = characteristic_get.characteristic;
+
+            ble.write(
+                app.deviceId,
+                service,
+                characteristic,
+                data.buffer, success, failure
+            );
+
+            ble.writeWithoutResponse(
+                app.deviceId,
+                service,
+                characteristic,
+                data.buffer, success, failure
             );
         },
-        updateCharacteristicValue: function() {
-            var input = document.querySelector('input');
-            var bytes = stringToBytes(input.value);
-
-            var success = function() {
-                outputDiv.innerHTML += messageInput.value + '<br/>';
-                alert('Updated RX value to ' + input.value);
-            };
-            var failure = function() {
-                alert('Error updating RX value.');
-            };
-
-            blePeripheral.setCharacteristicValue(SERVICE_UUID, RX_UUID, bytes).
-            then(success, failure);
-
+        disconnect: function(event) {
+            ble.disconnect(app.deviceId, app.showMainPage, app.onError);
         },
-        didReceiveWriteRequest: function(request) {
-            var message = bytesToString(request.value);
-            alert(message);
-            // warning: message should be escaped to avoid javascript injection
-            outputDiv.innerHTML += '<i>' + message + '</i><br/>';
+        showMainPage: function() {
+            resultDiv.innerHTML - '';
         },
-        onBluetoothStateChange: function(state) {
-            alert('Bluetooth State is', state);
-            outputDiv.innerHTML += 'Bluetooth  is ' +  state + '<br/>';
+        onError: function(reason) {
+            alert("ERROR: " + JSON.stringify(reason)); // real apps should use notification.alert
         }
     };
-
     app.initialize();
 </script>
 </body>
