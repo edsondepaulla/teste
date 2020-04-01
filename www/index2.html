@@ -46,11 +46,26 @@
             ble.scan([], 5, app.onDiscoverDevice, app.onError);
         },
         onDiscoverDevice: function(device) {
-            if(device.name == 'market4u') {
+            if (device.name == 'market4u') {
                 app.deviceId = device.id;
                 ble.connect(
                     app.deviceId,
-                    function(peripheral) {
+                    function (peripheral) {
+                        var characteristic = peripheral.characteristics.filter(function (element) {
+                            if (element.characteristic.toLowerCase() === bluefruit.txCharacteristic) {
+                                return element;
+                            }
+                        })[0];
+                        app.writeWithoutResponse = characteristic.properties.indexOf('WriteWithoutResponse') > -1 ? true : false;
+                        ble.startNotification(
+                            app.deviceId,
+                            'ffe0',
+                            'ffe1',
+                            function (data) {
+
+                            },
+                            app.onError
+                        );
                         app.showDetailPage();
                     },
                     app.onError
@@ -68,18 +83,33 @@
             for (var i = 0, l = value.length; i < l; i++) {
                 array[i] = value.charCodeAt(i);
             }
-            ble.writeWithoutResponse(
-                app.deviceId,
-                'ffe0',
-                'ffe1',
-                array.buffer,
-                function () {
-                    console.log("success");
-                },
-                function () {
-                    alert("FALHA CONECTAR MARKET4U");
-                }
-            );
+            if (app.writeWithoutResponse) {
+                ble.writeWithoutResponse(
+                    app.deviceId,
+                    'ffe0',
+                    'ffe1',
+                    array.buffer,
+                    function () {
+                        console.log("success");
+                    },
+                    function () {
+                        alert("FALHA CONECTAR MARKET4U");
+                    }
+                );
+            }else{
+                ble.write(
+                    app.deviceId,
+                    'ffe0',
+                    'ffe1',
+                    array.buffer,
+                    function () {
+                        console.log("success");
+                    },
+                    function () {
+                        alert("FALHA CONECTAR MARKET4U");
+                    }
+                );
+            }
         },
         disconnect: function(event) {
             ble.disconnect(
