@@ -4,7 +4,7 @@
   <description>
     teste
   </description>
-  <content src="index1.html" />
+  <content src="index.html" />
   <access origin="*" />
   <allow-navigation href="*" />
   <allow-intent href="*" />
