@@ -34,7 +34,12 @@
   <preference name="SwiftVersion" value="3.0" />
   <preference name="android-build-tool" value="gradle" />
   <platform name="android">
-      <allow-intent href="market:*" />
+    <allow-intent href="market:*" />
+    <edit-config target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+      <uses-permission android:name="android.permission.BLUETOOTH"/>
+      <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    </edit-config>
   </platform>
   <platform name="ios">
     <allow-intent href="itms:*" />
@@ -84,6 +89,8 @@
   <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
   <plugin name="phonegap-plugin-barcodescanner" />
   <plugin name="cordova-plugin-ble-central"/>
+
+  <plugin name="cordova-diagnostic-plugin"/>
 
   <plugin name="cordova-plugin-background-mode-bluetooth-central" />
 
