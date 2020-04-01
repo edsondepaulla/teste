@@ -64,10 +64,10 @@
       </array>
     </edit-config>
     <edit-config target="*-Info.plist" parent="NSBluetoothPeripheralUsageDescription">
-      <string>Permissões de acesso</string>
+      <string>$TEXT</string>
     </edit-config>
     <edit-config target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
-      <string>Permissões de acesso</string>
+      <string>$TEXT</string>
     </edit-config>
   </platform>
   <engine name="ios" spec="^5.0.1" />
