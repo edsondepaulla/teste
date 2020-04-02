@@ -19,6 +19,9 @@
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
     'use strict';
+    function bytesToString(buffer) {
+        return String.fromCharCode.apply(null, new Uint8Array(buffer));
+    }
     var bluetooth = {
         initialize: function () {
             this.bindEvents();
@@ -37,24 +40,35 @@
             ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
         onDiscoverDevice: function (device) {
-            if (device.name == 'market4u') {
-                bluetooth.deviceId = device.id;
-                ble.connect(
-                    bluetooth.deviceId,
-                    function () {
-                        ble.startNotification(
-                            bluetooth.deviceId,
-                            'ffe0',
-                            'ffe1',
-                            function (data) {
+            if (device.name == 'market4u')
+                bluetooth.connect(device.id);
+        },
+        connect: function (id) {
+            bluetooth.deviceId = id;
+            ble.connect(
+                bluetooth.deviceId,
+                function (peripheral) {
+                    bluetooth.determineWriteType(peripheral);
+                    ble.startNotification(
+                        bluetooth.deviceId,
+                        'ffe0',
+                        'ffe1',
+                        function(data) {
 
-                            },
-                            bluetooth.onError
-                        );
-                    },
-                    bluetooth.onError
-                );
-            }
+                        },
+                        bluetooth.onError
+                    );
+                    bluetooth.showDetailPage();
+                },
+                bluetooth.onError
+            );
+        },
+        determineWriteType: function(peripheral) {
+            var characteristic = peripheral.characteristics.filter(function (element) {
+                if (element.characteristic.toLowerCase() === 'ffe1')
+                    return element;
+            })[0];
+            bluetooth.writeWithoutResponse = characteristic.properties.indexOf('WriteWithoutResponse') > -1 ? true : false;
         },
         sendData0: function () {
             bluetooth.sendData('0');
@@ -66,18 +80,33 @@
             var array = new Uint8Array(value.length);
             for (var i = 0, l = value.length; i < l; i++)
                 array[i] = value.charCodeAt(i);
-            ble.writeWithoutResponse(
-                bluetooth.deviceId,
-                'ffe0',
-                'ffe1',
-                array.buffer,
-                function () {
+            if(bluetooth.writeWithoutResponse) {
+                ble.writeWithoutResponse(
+                    bluetooth.deviceId,
+                    'ffe0',
+                    'ffe1',
+                    array.buffer,
+                    function () {
 
-                },
-                function () {
-                    alert("FALHA");
-                }
-            );
+                    },
+                    function () {
+                        alert("FALHA");
+                    }
+                );
+            }else{
+                ble.write(
+                    bluetooth.deviceId,
+                    'ffe0',
+                    'ffe1',
+                    array.buffer,
+                    function () {
+
+                    },
+                    function () {
+                        alert("FALHA");
+                    }
+                );
+            }
         },
         disconnect: function (event) {
             ble.disconnect(
@@ -87,6 +116,9 @@
                 },
                 bluetooth.onError
             );
+        },
+        showDetailPage: function () {
+
         },
         onError: function (reason) {
             alert("ERROR: " + reason);
