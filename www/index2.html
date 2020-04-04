@@ -11,6 +11,9 @@
 <body>
 <div class="bluetooth">
     <h1>BluefruitLE</h1>
+
+    <input id="service" value="ffe0">
+    <input id="characteristic" value="ffe1">
     <button id="sendButton1">Button 1</button>
     <button id="sendButton0">Button 0</button>
     <button id="refreshButton">Update</button>
@@ -58,8 +61,8 @@
                     alert('CONECTADO2');
                     ble.startNotification(
                         bluetooth.deviceId,
-                        'ffe0',
-                        'ffe1',
+                        service.value,
+                        characteristic.value,
                         function(data) {
                             alert('CONECTADO4');
                             alert(JSON.stringify(data));
