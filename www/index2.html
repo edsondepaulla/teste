@@ -52,6 +52,7 @@
             ble.connect(
                 bluetooth.deviceId,
                 function (peripheral) {
+                    log.innerHTML = log.innerHTML + JSON.stringify(peripheral) + "<br/><br/>";
                     alert('CONECTADO');
                     bluetooth.determineWriteType(peripheral);
                     alert('CONECTADO2');
@@ -119,18 +120,6 @@
                 );
                 alert('CONECTADO6_1');
             }
-
-            alert('STOP');
-            ble.stopNotification(
-                bluetooth.deviceId,
-                'ffe0',
-                'ffe1',
-                function(data) {
-                    alert('STOP 1');
-                    alert(JSON.stringify(data));
-                },
-                bluetooth.onError
-            );
         },
         disconnect: function (event) {
             ble.disconnect(
