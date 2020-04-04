@@ -54,16 +54,18 @@
                 function (peripheral) {
                     alert('CONECTADO');
                     bluetooth.determineWriteType(peripheral);
+                    alert('CONECTADO2');
                     ble.startNotification(
                         bluetooth.deviceId,
                         'ffe0',
                         'ffe1',
                         function(data) {
+                            alert('CONECTADO4');
                             alert(JSON.stringify(peripheral));
                         },
                         bluetooth.onError
                     );
-                    bluetooth.showDetailPage();
+                    alert('CONECTADO3');
                 },
                 bluetooth.onError
             );
@@ -91,11 +93,11 @@
                     'ffe0',
                     'ffe1',
                     array.buffer,
-                    function () {
-
+                    function (e) {
+                        alert("ok 1: "+e);
                     },
-                    function () {
-                        alert("FALHA");
+                    function (e) {
+                        alert("FALHA: "+e);
                     }
                 );
             }else{
@@ -104,11 +106,11 @@
                     'ffe0',
                     'ffe1',
                     array.buffer,
-                    function () {
-
+                    function (e) {
+                        alert("ok 2: "+e);
                     },
                     function () {
-                        alert("FALHA");
+                        alert("FALHA: "+e);
                     }
                 );
             }
@@ -121,9 +123,6 @@
                 },
                 bluetooth.onError
             );
-        },
-        showDetailPage: function () {
-
         },
         onError: function (reason) {
             alert("ERROR: " + reason);
