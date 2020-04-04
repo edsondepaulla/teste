@@ -39,11 +39,11 @@
             bluetooth.refreshDeviceList();
         },
         refreshDeviceList: function () {
-            resultDiv.log = '';
+            log.innerHTML = '';
             ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
         onDiscoverDevice: function (device) {
-            resultDiv.log = resultDiv.innerHTML + JSON.stringify(device) + "<br/><br/>";
+           log.innerHTML = resultDiv.innerHTML + JSON.stringify(device) + "<br/><br/>";
             if (device.name == 'market4u')
                 bluetooth.connect(device.id);
         },
