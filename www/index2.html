@@ -15,6 +15,8 @@
     <button id="sendButton0">Button 0</button>
     <button id="refreshButton">Update</button>
     <button id="disconnectButton">Disconnect</button>
+
+    <div id="log"></div>
 </div>
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript">
@@ -37,9 +39,11 @@
             bluetooth.refreshDeviceList();
         },
         refreshDeviceList: function () {
+            resultDiv.log = '';
             ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
         onDiscoverDevice: function (device) {
+            resultDiv.log = resultDiv.innerHTML + JSON.stringify(device) + "<br/><br/>";
             if (device.name == 'market4u')
                 bluetooth.connect(device.id);
         },
@@ -55,7 +59,7 @@
                         'ffe0',
                         'ffe1',
                         function(data) {
-
+                            alert(JSON.stringify(peripheral));
                         },
                         bluetooth.onError
                     );
