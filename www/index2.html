@@ -84,10 +84,12 @@
             bluetooth.sendData('1');
         },
         sendData: function (value) {
+            alert('CONECTADO4');
             var array = new Uint8Array(value.length);
             for (var i = 0, l = value.length; i < l; i++)
                 array[i] = value.charCodeAt(i);
             if(bluetooth.writeWithoutResponse) {
+                alert('CONECTADO5');
                 ble.writeWithoutResponse(
                     bluetooth.deviceId,
                     'ffe0',
@@ -100,7 +102,9 @@
                         alert("FALHA: "+e);
                     }
                 );
+                alert('CONECTADO5_1');
             }else{
+                alert('CONECTADO6');
                 ble.write(
                     bluetooth.deviceId,
                     'ffe0',
@@ -113,6 +117,7 @@
                         alert("FALHA: "+e);
                     }
                 );
+                alert('CONECTADO6_1');
             }
         },
         disconnect: function (event) {
