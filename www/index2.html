@@ -43,7 +43,7 @@
             ble.scan([], 5, bluetooth.onDiscoverDevice, bluetooth.onError);
         },
         onDiscoverDevice: function (device) {
-           log.innerHTML = resultDiv.innerHTML + JSON.stringify(device) + "<br/><br/>";
+           log.innerHTML = log.innerHTML + JSON.stringify(device) + "<br/><br/>";
             if (device.name == 'market4u')
                 bluetooth.connect(device.id);
         },
