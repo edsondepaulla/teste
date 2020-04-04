@@ -12,8 +12,21 @@
 <div class="bluetooth">
     <h1>BluefruitLE</h1>
 
-    <input id="service" value="ffe0">
-    <input id="characteristic" value="ffe1">
+    writeWithoutResponse
+    <input id="writeWithoutResponse" value="1"><br>
+
+    service1
+    <input id="service1" value="ffe0"><br>
+
+    characteristic1
+    <input id="characteristic1" value="ffe1"><br><br>
+
+    service
+    <input id="service" value="ffe0"><br>
+
+    characteristic
+    <input id="characteristic" value="ffe1"><br><br>
+
     <button id="sendButton1">Button 1</button>
     <button id="sendButton0">Button 0</button>
     <button id="refreshButton">Update</button>
@@ -57,7 +70,6 @@
                 function (peripheral) {
                     log.innerHTML = log.innerHTML + JSON.stringify(peripheral) + "<br/><br/>";
                     alert('CONECTADO');
-                    bluetooth.determineWriteType(peripheral);
                     alert('CONECTADO2');
                     ble.startNotification(
                         bluetooth.deviceId,
@@ -74,13 +86,6 @@
                 bluetooth.onError
             );
         },
-        determineWriteType: function(peripheral) {
-            var characteristic = peripheral.characteristics.filter(function (element) {
-                if (element.characteristic.toLowerCase() === 'ffe1')
-                    return element;
-            })[0];
-            bluetooth.writeWithoutResponse = characteristic.properties.indexOf('WriteWithoutResponse') > -1 ? true : false;
-        },
         sendData0: function () {
             bluetooth.sendData('0');
         },
@@ -92,12 +97,12 @@
             var array = new Uint8Array(value.length);
             for (var i = 0, l = value.length; i < l; i++)
                 array[i] = value.charCodeAt(i);
-            if(bluetooth.writeWithoutResponse) {
+            if(parseInt(writeWithoutResponse.value)) {
                 alert('CONECTADO5');
                 ble.writeWithoutResponse(
                     bluetooth.deviceId,
-                    'ffe0',
-                    'ffe1',
+                    service1.value,
+                    characteristic1.value,
                     array.buffer,
                     function (e) {
                         alert("ok 1: "+e);
@@ -111,8 +116,8 @@
                 alert('CONECTADO6');
                 ble.write(
                     bluetooth.deviceId,
-                    'ffe0',
-                    'ffe1',
+                    service1.value,
+                    characteristic1.value,
                     array.buffer,
                     function (e) {
                         alert("ok 2: "+e);
