@@ -35,16 +35,8 @@
     <preference name="android-build-tool" value="gradle" />
     <platform name="android">
         <allow-intent href="market:*" />
-        <icon density="ldpi" src="res/android/icon32.png" />
-        <icon density="mdpi" src="res/android/icon48.png" />
-        <icon density="hdpi" src="res/android/icon72.png" />
-        <icon density="xhdpi" src="res/android/icon96.png" />
         <preference name="android-minSdkVersion" value="23" />
         <preference name="android-targetSdkVersion" value="28" />
-        <splash density="port-hdpi" src="res/screen/android/480.png" />
-        <splash density="port-ldpi" src="res/screen/android/200.png" />
-        <splash density="port-mdpi" src="res/screen/android/320.png" />
-        <splash density="port-xhdpi" src="res/screen/android/720.png" />
 		<config-file parent="/*" target="AndroidManifest.xml">
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -54,27 +46,6 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
-        <icon height="180" src="res/ios/icon180.png" width="180" />
-        <icon height="60" src="res/ios/icon60.png" width="60" />
-        <icon height="120" src="res/ios/icon120.png" width="120" />
-        <icon height="76" src="res/ios/icon76.png" width="76" />
-        <icon height="152" src="res/ios/icon152.png" width="152" />
-        <icon height="40" src="res/ios/icon40.png" width="40" />
-        <icon height="80" src="res/ios/icon80.png" width="80" />
-        <icon height="57" src="res/ios/icon57.png" width="57" />
-        <icon height="114" src="res/ios/icon114.png" width="114" />
-        <icon height="72" src="res/ios/icon72.png" width="72" />
-        <icon height="144" src="res/ios/icon144.png" width="144" />
-        <icon height="29" src="res/ios/icon29.png" width="29" />
-        <icon height="58" src="res/ios/icon58.png" width="58" />
-        <icon height="50" src="res/ios/icon50.png" width="50" />
-        <icon height="100" src="res/ios/icon100.png" width="100" />
-        <icon height="1024" src="res/ios/icon1024.png" width="1024" />
-        <splash height="480" src="res/screen/ios/320.png" width="320" />
-        <splash height="960" src="res/screen/ios/640.png" width="640" />
-        <splash height="1136" src="res/screen/ios/540.png" width="640" />
-        <splash height="1334" src="res/screen/ios/750.png" width="750" />
-        <splash height="2208" src="res/screen/ios/1242.png" width="1242" />
         <preference name="DisallowOverscroll" value="false" />
         <preference name="SplashScreenDelay" value="0" />
         <preference name="SplashMaintainAspectRatio" value="false" />
