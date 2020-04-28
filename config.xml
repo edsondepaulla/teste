@@ -37,11 +37,6 @@
         <allow-intent href="market:*" />
         <preference name="android-minSdkVersion" value="23" />
         <preference name="android-targetSdkVersion" value="28" />
-		<config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-            <uses-feature android:name="android.hardware.location.gps" />
-        </config-file>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
