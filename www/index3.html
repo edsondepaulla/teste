@@ -35,31 +35,29 @@
         </style>
     </head>
     <body>
-        <h3>cordova-plugin-request-location-accuracy example</h3>
-
         <div class="android">
-            <p>Location Mode: <span id="location-mode"></span></p>
+            <p>Modo de localização: <span id="location-mode"></span></p>
         </div>
         <div class="ios">
-            <p>To run through the test conditions, do the following:</p>
+            <p>Para executar as condições de teste, faça o seguinte:</p>
             <ol>
-                <li>Open Settings > Privacy and turn off Location Services</li>
-                <li>Request Location to trigger the native dialog that allows you to open Location Settings directly</li>
+                <li>Abra Configurações> Privacidade e desative os Serviços de Localização</li>
+                <li>Solicitar local para acionar a caixa de diálogo nativa que permite abrir diretamente as configurações de local</li>
             </ol>
 
-            <p>Location available: <span id="location-available"></span></p>
-            <p>Location Services: <span id="location-enabled"></span></p>
+            <p>Localização disponível: <span id="location-available"></span></p>
+            <p>Serviços de localização: <span id="location-enabled"></span></p>
         </div>
 
-        <p>Location authorized: <span id="location-authorized"></span></p>
+        <p>Local autorizado: <span id="location-authorized"></span></p>
         <div>
-            <button id="request-authorization" onclick="Location.requestLocationAuthorization()">Request Location Authorization</button>
+            <button id="request-authorization" onclick="Location.requestLocationAuthorization()">Solicitar autorização de local</button>
         </div>
 
         <div>
-            <button id="request-accuracy">Request Location Accuracy</button>
+            <button id="request-accuracy" onclick="Location.requestLocationAccuracy()">Precisão da localização da solicitação</button>
         </div>
 
-        <div><button onclick="Location.openSettings()">Open settings</button></div>
+        <div><button onclick="Location.openSettings()">Abrir configurações</button></div>
     </body>
 </html>

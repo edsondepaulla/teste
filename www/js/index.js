@@ -24,13 +24,10 @@ var Location = {
             case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
                 break;
             case cordova.plugins.diagnostic.permissionStatus.DENIED:
-                if (cordova.platformId === "android") {
-                    Location.openSettings();
+                if (cordova.platformId === "android")
                     Location.checkState();
-                }
                 break;
             case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
-                Location.openSettings();
                 Location.checkState();
                 break;
         }
@@ -63,65 +60,67 @@ var Location = {
                 alert("Não é possível solicitar a precisão da localização, favor verificar!");
         });
     },
+
     checkState: function () {
         var canRequest;
         cordova.plugins.locationAccuracy.canRequest(function (_canRequest) {
             canRequest = _canRequest;
             if (canRequest) {
-                Location.requestLocationAccuracy();
                 $('#request-accuracy').removeAttr('disabled');
             } else {
                 $('#request-accuracy').attr('disabled', 'disabled');
-
-                cordova.plugins.diagnostic.isLocationAvailable(
-                    function (available) {
-                        $('#location-available').text(available ? "AVAILABLE" : "UNAVAILABLE");
-                    }, function (error) {
-                        Location.checkState();
-                    }
-                );
-
-                cordova.plugins.diagnostic.isLocationEnabled(
-                    function (enabled) {
-                        $('#location-enabled').text(enabled ? "ENABLED" : "DISABLED");
-                        if (enabled) {
-                            cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
-                                $('#location-authorized').text(authorized ? "AUTHORIZED" : "UNAUTHORIZED");
-                            }, function (error) {
-                                Location.checkState();
-                            });
-                        } else {
-                            $('#location-authorized').text("UNKNOWN");
-                        }
-                    },
-                    function (error) {
-                        Location.checkState();
-                    }
-                );
-
-                cordova.plugins.diagnostic.getLocationAuthorizationStatus(
-                    Location.handleLocationAuthorizationStatus,
-                    function (error) {
-                        Location.checkState();
-                    }
-                );
-
-                if (cordova.platformId === "android") {
-                    cordova.plugins.diagnostic.getLocationMode(
-                        function (mode) {
-                            $('#location-mode').text(mode.toUpperCase());
-                            if (canRequest && mode !== "high_accuracy") {
-                                $('#request-accuracy').removeAttr('disabled');
-                            } else {
-                                $('#request-accuracy').attr('disabled', 'disabled');
-                            }
-                        }, function (error) {
-                            Location.checkState();
-                        }
-                    );
-                }
             }
         });
+
+        cordova.plugins.diagnostic.isLocationAvailable(
+            function (available) {
+                $('#location-available').text(available ? "ACESSÍVEL" : "INDISPONÍVEL");
+            }, function (error) {
+                Location.checkState();
+            }
+        );
+
+        cordova.plugins.diagnostic.isLocationEnabled(
+            function (enabled) {
+                $('#location-enabled').text(enabled ? "ATIVADA" : "DESATIVADA");
+                if (enabled) {
+                    cordova.plugins.diagnostic.isLocationAuthorized(function (authorized) {
+
+
+                        $('#location-authorized').text(authorized ? "AUTORIZADA" : "NÃO AUTORIZADO");
+                    }, function (error) {
+                        Location.checkState();
+                    });
+                } else {
+                    $('#location-authorized').text("DESCONHECIDA");
+                }
+            },
+            function (error) {
+                Location.checkState();
+            }
+        );
+
+        cordova.plugins.diagnostic.getLocationAuthorizationStatus(
+            Location.handleLocationAuthorizationStatus,
+            function (error) {
+                Location.checkState();
+            }
+        );
+
+        if (cordova.platformId === "android") {
+            cordova.plugins.diagnostic.getLocationMode(
+                function (mode) {
+                    $('#location-mode').text(mode.toUpperCase());
+                    if (canRequest && mode !== "high_accuracy") {
+                        $('#request-accuracy').removeAttr('disabled');
+                    } else {
+                        $('#request-accuracy').attr('disabled', 'disabled');
+                    }
+                }, function (error) {
+                    Location.checkState();
+                }
+            );
+        }
     }
 };
 
