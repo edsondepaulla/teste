@@ -141,7 +141,6 @@ var Location = {
     },
     onError: function (error) {
         alert("7 An error occurred: " + error);
-        Location.checkState();
     },
     handleSuccess: function (msg) {
         alert(msg);
