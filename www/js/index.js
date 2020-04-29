@@ -16,6 +16,7 @@ var Location = {
     },
 
     handleLocationAuthorizationStatus: function (status) {
+        alert(status);
         switch (status) {
             case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
             case cordova.plugins.diagnostic.permissionStatus.GRANTED:
