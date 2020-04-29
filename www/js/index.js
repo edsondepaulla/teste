@@ -34,31 +34,40 @@ var Location = {
     },
 
     requestLocationAuthorization: function () {
-        cordova.plugins.diagnostic.requestLocationAuthorization(
-            Location.handleLocationAuthorizationStatus,
-            function (error) {
-                Location.checkState();
-            }
-        );
+        try {
+            cordova.plugins.diagnostic.requestLocationAuthorization(
+                Location.handleLocationAuthorizationStatus,
+                function (error) {
+                    alert(error);
+                }
+            );
+        }catch (e) {
+            alert(e);
+        }
     },
 
     requestLocationAccuracy: function () {
-        cordova.plugins.locationAccuracy.canRequest(function (canRequest) {
-            if (canRequest) {
-                cordova.plugins.locationAccuracy.request(function () {
-                        Location.checkState();
-                    }, function (error) {
-                        if (error) {
-                            if (cordova.platformId === "android" && error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED) {
-                                if (window.confirm("Falha ao definir o Modo de Localização automaticamente como 'Alta Precisão'. Deseja mudar as Configurações de local e fazer isso manualmente?"))
-                                    cordova.plugins.diagnostic.switchToLocationSettings();
+        try {
+            cordova.plugins.locationAccuracy.canRequest(function (canRequest) {
+                if (canRequest) {
+                    cordova.plugins.locationAccuracy.request(function () {
+                            Location.checkState();
+                        }, function (error) {
+                            if (error) {
+                                if (cordova.platformId === "android" && error.code !== cordova.plugins.locationAccuracy.ERROR_USER_DISAGREED) {
+                                    if (window.confirm("Falha ao definir o Modo de Localização automaticamente como 'Alta Precisão'. Deseja mudar as Configurações de local e fazer isso manualmente?"))
+                                        cordova.plugins.diagnostic.switchToLocationSettings();
+                                }
                             }
-                        }
-                    }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
-                );
-            } else
-                alert("Não é possível solicitar a precisão da localização, favor verificar!");
-        });
+                        }, cordova.plugins.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY
+                    );
+                } else
+                    alert("Não é possível solicitar a precisão da localização, favor verificar!");
+            });
+
+        } catch (e) {
+            alert(e);
+        }
     },
 
     checkState: function () {
