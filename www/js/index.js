@@ -17,12 +17,9 @@ var Location = {
 
     handleLocationAuthorizationStatus: function (status) {
         switch (status) {
+            case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
             case cordova.plugins.diagnostic.permissionStatus.GRANTED:
-                if (cordova.platformId === "ios") {
-                    Location.onError("Location services is already switched ON");
-                }
                 $('#request-authorization').attr('disabled', 'disabled');
-
                 break;
             case cordova.plugins.diagnostic.permissionStatus.NOT_REQUESTED:
                 break;
@@ -35,11 +32,6 @@ var Location = {
             case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
                 // Android only
                 Location.onError("User denied permission to use location");
-                break;
-            case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                // iOS only
-                Location.onError("Location services is already switched ON");
-                $('#request-authorization').attr('disabled', 'disabled');
                 break;
         }
     },
